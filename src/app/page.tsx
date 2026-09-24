@@ -1,8 +1,8 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { catalog } from "@/data";
-import type { Affiliation, Gender, Species } from "@/data/types";
+import type { Affiliation, Character, Gender, Rating, Species } from "@/data/types";
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
@@ -12,12 +12,107 @@ type AffFilter = Affiliation | "all";
 type GenderFilter = Gender | "all";
 type SpeciesFilter = Species | "all";
 
+/** False on server + hydration render, true after mount. Gates randomness + localStorage reads. */
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
+const SELECT_CLS =
+  "rounded-lg border border-zinc-300 bg-white p-2 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
+
+function VoteCard({
+  c,
+  rating,
+  flipEnabled,
+  showBelow,
+  onVote,
+}: {
+  c: Character;
+  rating: Rating | undefined;
+  flipEnabled: boolean;
+  showBelow: boolean;
+  onVote: () => void;
+}) {
+  const [hover, setHover] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const flipped = pinned || (flipEnabled && hover);
+  const elo = rating?.elo ?? BASE_ELO;
+
+  return (
+    <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
+        <div className="[perspective:1200px]">
+          <div
+            className="relative transition-transform duration-300 [transform-style:preserve-3d]"
+            style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
+          >
+            <div className="[backface-visibility:hidden]">
+              <CharacterPortrait c={c} priority />
+            </div>
+            {/* Back of card: stats on the card itself */}
+            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-3 text-xs text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
+              <p className="font-bold">
+                {c.superName} <span className="font-normal opacity-70">({c.name})</span>
+              </p>
+              <p className="mt-1">
+                <AffiliationBadge value={c.affiliation} />
+              </p>
+              <p className="mt-2 opacity-80">{c.universeLabel}</p>
+              <p className="mt-1 opacity-80">{c.teams.join("; ")}</p>
+              <p className="mt-1">
+                <span className="font-semibold">Powers: </span>
+                {c.powers.join(", ")}
+              </p>
+              <p className="mt-1 opacity-80">
+                First: {c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})
+              </p>
+              <p className="mt-1 font-semibold">Elo: {elo}</p>
+            </div>
+          </div>
+        </div>
+      </button>
+      <p className="mt-2 text-center text-lg font-bold">
+        {c.superName} <span className="font-normal opacity-60">({c.name})</span>
+      </p>
+      <p className="mt-1 flex items-center justify-center gap-2">
+        <AffiliationBadge value={c.affiliation} />
+        <span
+          role="button"
+          tabIndex={0}
+          title={pinned ? "Unpin stats" : "Pin stats on card"}
+          aria-label={pinned ? `Unpin ${c.superName} stats` : `Pin ${c.superName} stats`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setPinned((p) => !p);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setPinned((p) => !p);
+            }
+          }}
+          className="cursor-pointer rounded-full border px-2 py-0.5 text-xs opacity-70 hover:opacity-100"
+        >
+          {pinned ? "📌 pinned" : "ⓘ stats"}
+        </span>
+      </p>
+      {showBelow && <StatCard c={c} elo={elo} />}
+    </div>
+  );
+}
+
 export default function Home() {
+  const mounted = useMounted();
   const { theme, toggle } = useTheme();
   const [aff, setAff] = useState<AffFilter>("all");
   const [gender, setGender] = useState<GenderFilter>("all");
   const [species, setSpecies] = useState<SpeciesFilter>("all");
-  const [showStats, setShowStats] = useState(false);
+  const [flipEnabled, setFlipEnabled] = useState(true);
+  const [showBelow, setShowBelow] = useState(false);
 
   const pool = useMemo(
     () =>
@@ -33,13 +128,14 @@ export default function Home() {
 
   const { ratings, vote } = useRatings(poolIds);
   const [pair, setPair] = useState<[string, string] | null>(null);
+  // Client-only randomness: null until mounted, so server + hydration HTML match.
   const activePair = useMemo(() => {
-    if (poolIds.length < 2) return null;
+    if (!mounted || poolIds.length < 2) return null;
     if (!pair || !poolIds.includes(pair[0]) || !poolIds.includes(pair[1])) {
       return pickPair(poolIds);
     }
     return pair;
-  }, [pair, poolIds]);
+  }, [mounted, pair, poolIds]);
 
   const left = activePair ? pool.find((c) => c.id === activePair[0])! : null;
   const right = activePair ? pool.find((c) => c.id === activePair[1])! : null;
@@ -56,12 +152,15 @@ export default function Home() {
     setPair(keepId === activePair?.[0] ? [keepId, next] : [next, keepId]);
   };
 
+  // Ratings only render after mount (localStorage differs per browser).
+  const rOf = (id: string): Rating | undefined => (mounted ? ratings[id] : undefined);
   const ranked = useMemo(
     () =>
       [...pool].sort(
-        (a, b) => (ratings[b.id]?.elo ?? BASE_ELO) - (ratings[a.id]?.elo ?? BASE_ELO)
+        (a, b) => (rOf(b.id)?.elo ?? BASE_ELO) - (rOf(a.id)?.elo ?? BASE_ELO)
       ),
-    [pool, ratings]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pool, ratings, mounted]
   );
 
   return (
@@ -71,12 +170,15 @@ export default function Home() {
           <h1 className="text-3xl font-black tracking-tight">Facemash — DC Supers</h1>
           <p className="opacity-70">Who wins? Click to vote. Elo-ranked, stored locally.</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowStats((s) => !s)} className="rounded-full border px-4 py-2 text-sm">
-            {showStats ? "Hide stats" : "Show stats on hover"}
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => setFlipEnabled((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={flipEnabled}>
+            {flipEnabled ? "🂠 Flip: on" : "🂠 Flip: off"}
+          </button>
+          <button onClick={() => setShowBelow((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={showBelow}>
+            {showBelow ? "Stats below: on" : "Stats below: off"}
           </button>
           <button onClick={toggle} className="rounded-full border px-4 py-2 text-sm" aria-label="Toggle theme">
-            {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+            {!mounted || theme === "dark" ? "☀ Light" : "🌙 Dark"}
           </button>
         </div>
       </header>
@@ -85,7 +187,7 @@ export default function Home() {
       <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm">
           Affiliation
-          <select value={aff} onChange={(e) => setAff(e.target.value as AffFilter)} className="rounded-lg border bg-transparent p-2">
+          <select value={aff} onChange={(e) => setAff(e.target.value as AffFilter)} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="hero">Hero</option>
             <option value="anti-hero">Anti-hero</option>
@@ -94,7 +196,7 @@ export default function Home() {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Gender
-          <select value={gender} onChange={(e) => setGender(e.target.value as GenderFilter)} className="rounded-lg border bg-transparent p-2">
+          <select value={gender} onChange={(e) => setGender(e.target.value as GenderFilter)} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -103,7 +205,7 @@ export default function Home() {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Species
-          <select value={species} onChange={(e) => setSpecies(e.target.value as SpeciesFilter)} className="rounded-lg border bg-transparent p-2">
+          <select value={species} onChange={(e) => setSpecies(e.target.value as SpeciesFilter)} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="human">Human</option>
             <option value="meta-human">Meta-human</option>
@@ -116,41 +218,25 @@ export default function Home() {
       {/* Arena */}
       {left && right ? (
         <section className="mt-6">
-          <div className="grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-            <button onClick={() => choose(left.id, right.id)} className="group text-left" aria-label={`Vote ${left.superName}`}>
-              <CharacterPortrait c={left} priority />
-              <p className="mt-2 text-center text-lg font-bold group-hover:underline">
-                {left.superName} <span className="font-normal opacity-60">({left.name})</span>
-              </p>
-              <p className="mt-1 text-center">
-                <AffiliationBadge value={left.affiliation} />
-              </p>
-              <div className={showStats ? "" : "hidden group-hover:block"}>
-                <StatCard c={left} elo={ratings[left.id]?.elo ?? BASE_ELO} />
-              </div>
-            </button>
-            <div className="text-center font-black opacity-50">OR</div>
-            <button onClick={() => choose(right.id, left.id)} className="group text-left" aria-label={`Vote ${right.superName}`}>
-              <CharacterPortrait c={right} priority />
-              <p className="mt-2 text-center text-lg font-bold group-hover:underline">
-                {right.superName} <span className="font-normal opacity-60">({right.name})</span>
-              </p>
-              <p className="mt-1 text-center">
-                <AffiliationBadge value={right.affiliation} />
-              </p>
-              <div className={showStats ? "" : "hidden group-hover:block"}>
-                <StatCard c={right} elo={ratings[right.id]?.elo ?? BASE_ELO} />
-              </div>
-            </button>
+          <div className="grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-start">
+            <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(left.id, right.id)} />
+            <div className="pt-24 text-center font-black opacity-50 sm:pt-40">OR</div>
+            <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(right.id, left.id)} />
           </div>
           <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
-            <button onClick={skipBoth} className="rounded-full border px-4 py-2">Skip both ⟳</button>
             <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
+            <button onClick={skipBoth} className="rounded-full border px-4 py-2">Skip both ⟳</button>
             <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
           </div>
         </section>
-      ) : (
+      ) : mounted ? (
         <p className="mt-6 rounded-2xl border p-6 text-center">Not enough characters for this filter — loosen it.</p>
+      ) : (
+        <section className="mt-6 grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center" aria-busy="true" aria-label="Loading matchup">
+          <div className="aspect-[3/4] w-full animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+          <div className="pt-24 text-center font-black opacity-50 sm:pt-40">OR</div>
+          <div className="aspect-[3/4] w-full animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+        </section>
       )}
 
       {/* Rankings */}
@@ -158,7 +244,7 @@ export default function Home() {
         <h2 className="text-xl font-bold">Rankings ({ranked.length})</h2>
         <ol className="mt-3 grid gap-2 md:grid-cols-2">
           {ranked.map((c, i) => {
-            const r = ratings[c.id];
+            const r = rOf(c.id);
             return (
               <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
