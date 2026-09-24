@@ -43,7 +43,9 @@ export function StatCard({ c, elo }: { c: Character; elo?: number }) {
         {c.superName} <span className="font-normal opacity-70">({c.name})</span>
       </p>
       <dl className="mt-2 space-y-1 opacity-90">
+        <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd className="capitalize">{c.affiliation}</dd></div>
+        <div><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">First appearance:</dt><dd>{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>

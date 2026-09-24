@@ -4,7 +4,8 @@ Vote and rank DC heroes, villains and anti-heroes, Facemash-style. English-only 
 Portuguese i18n is backlog. Stack: **TypeScript + Next.js (App Router) + Tailwind v4**.
 
 Live demo goal: free, always-on, no manual wake-ups. Votes are local-first
-(`localStorage`); global backend is a later sprint.
+(`localStorage`); global backend is a later sprint. Deploys on **Vercel**
+(App Router + SSG, security headers in `next.config.ts`). All testing local for now.
 
 ## Quickstart
 
@@ -33,12 +34,12 @@ npm run build
 src/data/
   types.ts                 # Character, Affiliation, Gender, Species
   index.ts                 # catalog[] aggregator
-  comics/dc/heroes.ts      # 10 heroes
-  comics/dc/villains.ts    # 10 villains
-  comics/dc/anti-heroes.ts # 10 anti-heroes
+  comics/dc/heroes.ts      # 30 heroes (your roster)
+  comics/dc/villains.ts    # 30 villains (your roster)
+  comics/dc/anti-heroes.ts # 28 anti-heroes (your 30 minus Ra's+Talia, kept once as villains)
   comics/marvel/           # future — same shape
   anime/                   # future — same shape
-public/images/comics/dc/<id>.webp  # future licensed art
+public/images/comics/dc/<id>.webp  # future licensed art (placeholders for now)
 ```
 
 Add a universe by adding one folder + one import in `src/data/index.ts`.

@@ -1,14 +1,16 @@
 # Kanban — Facemash (Scrum / Agile)
 
-Sprint 0 (done): scaffold Next.js+TS, 30-character DC roster, arena + Elo +
-rankings + filters + skip + stat card + dark/light + responsive, README,
-unit tests, lint, roster validation.
+Sprint 0 (done): scaffold Next.js+TS, 88-character DC roster (30 heroes + 30 villains +
+28 anti-heroes; Ra's+Talia deduped as villains), arena + Elo + rankings +
+filters + skip + stat card (universe/teams/bio) + dark/light + responsive,
+README, unit tests, lint, roster validation. Vercel-ready (SSG + headers).
 
 ## Done
 
 - [x] Scaffold `C:\GitHub\facemash` (Next.js 16, TS, Tailwind, ESLint)
 - [x] Data model `Category > Universe > Affiliation` (`src/data/*`)
-- [x] Roster 10 heroes + 10 villains + 10 anti-heroes with bio/first-appearance/powers
+- [x] Roster 30 heroes + 30 villains + 28 anti-heroes with universe/teams in bio
+- [x] Display names as Super (Name): The Flash (Barry Allen), Green Lantern (Hal Jordan), Robin (Damian Wayne)
 - [x] Elo engine + tests (`src/lib/elo.ts`, `__tests__/elo.test.ts`)
 - [x] Arena vote + skip both/one-side + rankings + filters + char pages
 - [x] Dark default + light toggle + responsive 3:4 portraits

@@ -24,7 +24,11 @@ export interface Character {
   name: string;
   category: CategoryId;
   universe: UniverseId;
+  /** Detailed continuity label, e.g. "DC Universe — Earth-0". Shown in bio/stat card. */
+  universeLabel: string;
   affiliation: Affiliation;
+  /** Teams/groups, e.g. ["Justice League", "Bat-Family"]. Shown in bio/stat card. */
+  teams: string[];
   gender: Gender;
   species: Species;
   powers: string[];
