@@ -56,7 +56,7 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
 
 export function StatCard({ c, elo }: { c: Character; elo?: number }) {
   return (
-    <div className="mt-3 w-full rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80">
+    <div className="mt-3 w-full flex-1 rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80">
       <StatHeading c={c} />
       <StatDetails c={c} elo={elo} />
     </div>
@@ -88,7 +88,7 @@ export function StatDetails({ c, elo }: { c: Character; elo?: number }) {
           <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
         )}
       </dl>
-      <p className="mt-2 opacity-70">{c.bio}</p>
+      <p className="mt-2 opacity-70"><span className="font-semibold opacity-100">Bio:</span> {c.bio}</p>
     </>
   );
 }

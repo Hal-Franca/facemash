@@ -52,8 +52,9 @@ function VoteCard({
               <CharacterPortrait c={c} priority />
             </div>
             {/* Back of card: same info as below, but dividers between every row */}
-            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-xs text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
+            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-sm text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
               <StatHeading c={c} />
+              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
               <dl className="mt-2 space-y-1 opacity-90">
                 <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
                 <hr className="border-zinc-300 dark:border-zinc-700" />
@@ -72,7 +73,7 @@ function VoteCard({
                 <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
               </dl>
               <hr className="my-1 border-zinc-300 dark:border-zinc-700" />
-              <p className="opacity-70">{c.bio}</p>
+              <p className="opacity-70"><span className="font-semibold opacity-100">Bio:</span> {c.bio}</p>
             </div>
           </div>
         </div>
@@ -221,7 +222,7 @@ export default function Home() {
       {left && right ? (
         <section className="mt-6">
           {/* Row 1: portraits (+OR). Row 2: stats + per-card skips. Middle stays centered on the portraits. */}
-          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[1fr_auto_1fr] sm:items-start">
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[1fr_auto_1fr]">
             <div className="order-1 sm:col-start-1 sm:row-start-1">
               <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} onVote={() => choose(left.id, right.id)} />
             </div>
@@ -232,13 +233,13 @@ export default function Home() {
             <div className="order-4 sm:order-3 sm:col-start-3 sm:row-start-1">
               <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} onVote={() => choose(right.id, left.id)} />
             </div>
-            <div className="order-2 sm:order-4 sm:col-start-1 sm:row-start-2">
+            <div className="order-2 flex flex-col sm:order-4 sm:col-start-1 sm:row-start-2">
               {showBelow && <StatCard c={left} elo={rOf(left.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
               </p>
             </div>
-            <div className="order-5 sm:col-start-3 sm:row-start-2">
+            <div className="order-5 flex flex-col sm:col-start-3 sm:row-start-2">
               {showBelow && <StatCard c={right} elo={rOf(right.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
