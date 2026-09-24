@@ -57,7 +57,7 @@ function VoteCard({
               <dl className="mt-2 space-y-1 opacity-90">
                 <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
                 <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd className="capitalize">{c.affiliation}</dd></div>
+                <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd><AffiliationBadge value={c.affiliation} /></dd></div>
                 <hr className="border-zinc-300 dark:border-zinc-700" />
                 <div className="flex gap-2"><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
                 <hr className="border-zinc-300 dark:border-zinc-700" />

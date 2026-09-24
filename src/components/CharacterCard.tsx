@@ -63,17 +63,12 @@ export function StatCard({ c, elo }: { c: Character; elo?: number }) {
   );
 }
 
-/** Badge-first heading shared by the below-card stats and the flip-card back. */
+/** Name heading shared by the below-card stats and the flip-card back. */
 export function StatHeading({ c }: { c: Character }) {
   return (
-    <>
-      <p>
-        <AffiliationBadge value={c.affiliation} />
-      </p>
-      <p className="mt-1 font-bold">
-        {c.superName} <span className="font-normal opacity-70">({c.name})</span>
-      </p>
-    </>
+    <p className="font-bold">
+      {c.superName} <span className="font-normal opacity-70">({c.name})</span>
+    </p>
   );
 }
 
@@ -83,7 +78,7 @@ export function StatDetails({ c, elo }: { c: Character; elo?: number }) {
     <>
       <dl className="mt-2 space-y-1 opacity-90">
         <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
-        <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd className="capitalize">{c.affiliation}</dd></div>
+        <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd><AffiliationBadge value={c.affiliation} /></dd></div>
         <div><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
