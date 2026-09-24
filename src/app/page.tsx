@@ -6,7 +6,7 @@ import type { Affiliation, Gender, Species } from "@/data/types";
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { CharacterPortrait, StatCard } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard } from "@/components/CharacterCard";
 
 type AffFilter = Affiliation | "all";
 type GenderFilter = Gender | "all";
@@ -122,6 +122,9 @@ export default function Home() {
               <p className="mt-2 text-center text-lg font-bold group-hover:underline">
                 {left.superName} <span className="font-normal opacity-60">({left.name})</span>
               </p>
+              <p className="mt-1 text-center">
+                <AffiliationBadge value={left.affiliation} />
+              </p>
               <div className={showStats ? "" : "hidden group-hover:block"}>
                 <StatCard c={left} elo={ratings[left.id]?.elo ?? BASE_ELO} />
               </div>
@@ -131,6 +134,9 @@ export default function Home() {
               <CharacterPortrait c={right} priority />
               <p className="mt-2 text-center text-lg font-bold group-hover:underline">
                 {right.superName} <span className="font-normal opacity-60">({right.name})</span>
+              </p>
+              <p className="mt-1 text-center">
+                <AffiliationBadge value={right.affiliation} />
               </p>
               <div className={showStats ? "" : "hidden group-hover:block"}>
                 <StatCard c={right} elo={ratings[right.id]?.elo ?? BASE_ELO} />
@@ -160,7 +166,8 @@ export default function Home() {
                   <Link href={`/characters/${c.id}`} className="font-semibold hover:underline">
                     {c.superName}
                   </Link>
-                  <span className="opacity-60 capitalize">{c.affiliation} · {c.species}</span>
+                  <AffiliationBadge value={c.affiliation} />
+                  <span className="opacity-60 capitalize">{c.species}</span>
                 </span>
                 <span className="opacity-80">{r?.elo ?? BASE_ELO} · {r?.wins ?? 0}W/{r?.losses ?? 0}L</span>
               </li>

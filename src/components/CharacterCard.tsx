@@ -1,4 +1,22 @@
-import type { Character } from "@/data/types";
+import type { Affiliation, Character } from "@/data/types";
+
+const AFFILIATION_STYLES: Record<Affiliation, string> = {
+  hero: "bg-sky-500/15 text-sky-700 ring-sky-500/40 dark:text-sky-300",
+  villain: "bg-red-500/15 text-red-700 ring-red-500/40 dark:text-red-300",
+  "anti-hero": "bg-amber-500/15 text-amber-700 ring-amber-500/40 dark:text-amber-300",
+  other: "bg-zinc-500/15 text-zinc-700 ring-zinc-500/40 dark:text-zinc-300",
+};
+
+/** Color-coded moral-role badge: hero (blue) / villain (red) / anti-hero (amber). */
+export function AffiliationBadge({ value }: { value: Affiliation }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ring-1 ring-inset ${AFFILIATION_STYLES[value]}`}
+    >
+      {value}
+    </span>
+  );
+}
 
 function initials(c: Character) {
   return c.superName
@@ -41,6 +59,9 @@ export function StatCard({ c, elo }: { c: Character; elo?: number }) {
     <div className="mt-3 w-full rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80">
       <p className="font-bold">
         {c.superName} <span className="font-normal opacity-70">({c.name})</span>
+      </p>
+      <p className="mt-1">
+        <AffiliationBadge value={c.affiliation} />
       </p>
       <dl className="mt-2 space-y-1 opacity-90">
         <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
