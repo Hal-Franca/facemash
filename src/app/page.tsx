@@ -22,7 +22,7 @@ function useMounted() {
 }
 
 const SELECT_CLS =
-  "rounded-lg border border-zinc-300 bg-white p-2 pr-8 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
+  "rounded-lg border border-zinc-300 bg-white p-2 pr-12 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
 
 function VoteCard({
   c,
