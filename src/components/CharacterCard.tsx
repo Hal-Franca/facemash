@@ -57,12 +57,30 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
 export function StatCard({ c, elo }: { c: Character; elo?: number }) {
   return (
     <div className="mt-3 w-full rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80">
-      <p className="font-bold">
-        {c.superName} <span className="font-normal opacity-70">({c.name})</span>
-      </p>
-      <p className="mt-1">
+      <StatHeading c={c} />
+      <StatDetails c={c} elo={elo} />
+    </div>
+  );
+}
+
+/** Badge-first heading shared by the below-card stats and the flip-card back. */
+export function StatHeading({ c }: { c: Character }) {
+  return (
+    <>
+      <p>
         <AffiliationBadge value={c.affiliation} />
       </p>
+      <p className="mt-1 font-bold">
+        {c.superName} <span className="font-normal opacity-70">({c.name})</span>
+      </p>
+    </>
+  );
+}
+
+/** Full labeled stat block (universe → bio) shared by both stats views. */
+export function StatDetails({ c, elo }: { c: Character; elo?: number }) {
+  return (
+    <>
       <dl className="mt-2 space-y-1 opacity-90">
         <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
         <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd className="capitalize">{c.affiliation}</dd></div>
@@ -76,6 +94,6 @@ export function StatCard({ c, elo }: { c: Character; elo?: number }) {
         )}
       </dl>
       <p className="mt-2 opacity-70">{c.bio}</p>
-    </div>
+    </>
   );
 }
