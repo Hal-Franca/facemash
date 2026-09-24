@@ -6,7 +6,7 @@ import type { Affiliation, Character, Gender, Rating, Species } from "@/data/typ
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { AffiliationBadge, CharacterPortrait, StatCard, StatHeading } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
 
 type AffFilter = Affiliation | "all";
 type GenderFilter = Gender | "all";
@@ -51,29 +51,11 @@ function VoteCard({
             <div className="[backface-visibility:hidden]">
               <CharacterPortrait c={c} priority />
             </div>
-            {/* Back of card: same info as below, but dividers between every row */}
+            {/* Back of card: shared stats block (dividers included) */}
             <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-sm text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
               <StatHeading c={c} />
               <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
-              <dl className="mt-2 space-y-1 opacity-90">
-                <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd><AffiliationBadge value={c.affiliation} /></dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">First appearance:</dt><dd>{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Powers:</dt><dd>{c.powers.join(", ")}</dd></div>
-                <hr className="border-zinc-300 dark:border-zinc-700" />
-                <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
-              </dl>
-              <hr className="my-1 border-zinc-300 dark:border-zinc-700" />
-              <p className="opacity-70"><span className="font-semibold opacity-100">Bio:</span> {c.bio}</p>
+              <StatDetails c={c} elo={elo} />
             </div>
           </div>
         </div>

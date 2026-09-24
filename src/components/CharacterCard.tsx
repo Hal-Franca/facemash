@@ -66,7 +66,7 @@ export function StatCard({ c, elo }: { c: Character; elo?: number }) {
 /** Name heading shared by the below-card stats and the flip-card back. */
 export function StatHeading({ c }: { c: Character }) {
   return (
-    <p className="font-bold">
+    <p className="text-base font-bold">
       {c.superName} <span className="font-normal opacity-70">({c.name})</span>
     </p>
   );
@@ -78,17 +78,27 @@ export function StatDetails({ c, elo }: { c: Character; elo?: number }) {
     <>
       <dl className="mt-2 space-y-1 opacity-90">
         <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
         <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd><AffiliationBadge value={c.affiliation} /></dd></div>
-        <div><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
+        <div className="flex gap-2"><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
         <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
         <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
         <div className="flex gap-2"><dt className="font-semibold">First appearance:</dt><dd>{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>
-        <div><dt className="font-semibold">Powers:</dt><dd>{c.powers.join(", ")}</dd></div>
+        <hr className="border-zinc-300 dark:border-zinc-700" />
+        <div className="flex gap-2"><dt className="font-semibold">Powers:</dt><dd>{c.powers.join(", ")}</dd></div>
         {typeof elo === "number" && (
-          <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
+          <>
+            <hr className="border-zinc-300 dark:border-zinc-700" />
+            <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
+          </>
         )}
       </dl>
-      <p className="mt-2 opacity-70"><span className="font-semibold opacity-100">Bio:</span> {c.bio}</p>
+      <hr className="my-1 border-zinc-300 dark:border-zinc-700" />
+      <p className="opacity-70"><span className="font-semibold opacity-100">Bio:</span> {c.bio}</p>
     </>
   );
 }
