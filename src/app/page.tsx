@@ -233,8 +233,12 @@ export default function Home() {
             <div className="order-1 sm:col-start-1 sm:row-start-1">
               <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} onVote={() => choose(left.id, right.id)} />
             </div>
-            <div className="order-3 flex flex-row items-center justify-center gap-2 sm:order-2 sm:col-start-2 sm:row-start-1 sm:min-w-28 sm:flex-col sm:gap-3 sm:self-center">
-              <div className="font-black opacity-50">OR</div>
+            <div className="order-3 flex flex-col items-center justify-center gap-2 sm:order-2 sm:col-start-2 sm:row-start-1 sm:min-w-28 sm:gap-3 sm:self-center">
+              <div className="flex w-full items-center gap-3 sm:w-auto">
+                <span className="h-px flex-1 bg-zinc-300 sm:hidden dark:bg-zinc-700" aria-hidden="true" />
+                <div className="font-black opacity-50">OR</div>
+                <span className="h-px flex-1 bg-zinc-300 sm:hidden dark:bg-zinc-700" aria-hidden="true" />
+              </div>
               <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
             </div>
             <div className="order-4 sm:order-3 sm:col-start-3 sm:row-start-1">
