@@ -222,23 +222,23 @@ export default function Home() {
         <section className="mt-6">
           {/* Row 1: portraits (+OR). Row 2: stats + per-card skips. Middle stays centered on the portraits. */}
           <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[1fr_auto_1fr] sm:items-start">
-            <div className="order-1">
+            <div className="order-1 sm:col-start-1 sm:row-start-1">
               <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} onVote={() => choose(left.id, right.id)} />
             </div>
-            <div className="order-3 flex flex-row items-center justify-center gap-2 sm:order-2 sm:min-w-28 sm:flex-col sm:gap-3 sm:self-center">
+            <div className="order-3 flex flex-row items-center justify-center gap-2 sm:order-2 sm:col-start-2 sm:row-start-1 sm:min-w-28 sm:flex-col sm:gap-3 sm:self-center">
               <div className="font-black opacity-50">OR</div>
               <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
             </div>
-            <div className="order-4 sm:order-3">
+            <div className="order-4 sm:order-3 sm:col-start-3 sm:row-start-1">
               <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} onVote={() => choose(right.id, left.id)} />
             </div>
-            <div className="order-2 sm:order-4">
+            <div className="order-2 sm:order-4 sm:col-start-1 sm:row-start-2">
               {showBelow && <StatCard c={left} elo={rOf(left.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
               </p>
             </div>
-            <div className="order-5">
+            <div className="order-5 sm:col-start-3 sm:row-start-2">
               {showBelow && <StatCard c={right} elo={rOf(right.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
