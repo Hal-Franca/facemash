@@ -1,0 +1,173 @@
+"use client";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { catalog } from "@/data";
+import type { Affiliation, Gender, Species } from "@/data/types";
+import { BASE_ELO, pickPair } from "@/lib/elo";
+import { useRatings } from "@/lib/store";
+import { useTheme } from "@/components/ThemeProvider";
+import { CharacterPortrait, StatCard } from "@/components/CharacterCard";
+
+type AffFilter = Affiliation | "all";
+type GenderFilter = Gender | "all";
+type SpeciesFilter = Species | "all";
+
+export default function Home() {
+  const { theme, toggle } = useTheme();
+  const [aff, setAff] = useState<AffFilter>("all");
+  const [gender, setGender] = useState<GenderFilter>("all");
+  const [species, setSpecies] = useState<SpeciesFilter>("all");
+  const [showStats, setShowStats] = useState(false);
+
+  const pool = useMemo(
+    () =>
+      catalog.filter(
+        (c) =>
+          (aff === "all" || c.affiliation === aff) &&
+          (gender === "all" || c.gender === gender) &&
+          (species === "all" || c.species === species)
+      ),
+    [aff, gender, species]
+  );
+  const poolIds = useMemo(() => pool.map((c) => c.id), [pool]);
+
+  const { ratings, vote } = useRatings(poolIds);
+  const [pair, setPair] = useState<[string, string] | null>(null);
+  const activePair = useMemo(() => {
+    if (poolIds.length < 2) return null;
+    if (!pair || !poolIds.includes(pair[0]) || !poolIds.includes(pair[1])) {
+      return pickPair(poolIds);
+    }
+    return pair;
+  }, [pair, poolIds]);
+
+  const left = activePair ? pool.find((c) => c.id === activePair[0])! : null;
+  const right = activePair ? pool.find((c) => c.id === activePair[1])! : null;
+
+  const choose = (winnerId: string, loserId: string) => {
+    vote(winnerId, loserId);
+    setPair(pickPair(poolIds));
+  };
+  const skipBoth = () => setPair(pickPair(poolIds));
+  const skipOne = (keepId: string) => {
+    const others = poolIds.filter((id) => id !== keepId);
+    if (!others.length) return;
+    const next = others[Math.floor(Math.random() * others.length)];
+    setPair(keepId === activePair?.[0] ? [keepId, next] : [next, keepId]);
+  };
+
+  const ranked = useMemo(
+    () =>
+      [...pool].sort(
+        (a, b) => (ratings[b.id]?.elo ?? BASE_ELO) - (ratings[a.id]?.elo ?? BASE_ELO)
+      ),
+    [pool, ratings]
+  );
+
+  return (
+    <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6">
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight">Facemash — DC Supers</h1>
+          <p className="opacity-70">Who wins? Click to vote. Elo-ranked, stored locally.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => setShowStats((s) => !s)} className="rounded-full border px-4 py-2 text-sm">
+            {showStats ? "Hide stats" : "Show stats on hover"}
+          </button>
+          <button onClick={toggle} className="rounded-full border px-4 py-2 text-sm" aria-label="Toggle theme">
+            {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+          </button>
+        </div>
+      </header>
+
+      {/* Filters */}
+      <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
+        <label className="flex flex-col gap-1 text-sm">
+          Affiliation
+          <select value={aff} onChange={(e) => setAff(e.target.value as AffFilter)} className="rounded-lg border bg-transparent p-2">
+            <option value="all">All</option>
+            <option value="hero">Hero</option>
+            <option value="anti-hero">Anti-hero</option>
+            <option value="villain">Villain</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          Gender
+          <select value={gender} onChange={(e) => setGender(e.target.value as GenderFilter)} className="rounded-lg border bg-transparent p-2">
+            <option value="all">All</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          Species
+          <select value={species} onChange={(e) => setSpecies(e.target.value as SpeciesFilter)} className="rounded-lg border bg-transparent p-2">
+            <option value="all">All</option>
+            <option value="human">Human</option>
+            <option value="meta-human">Meta-human</option>
+            <option value="alien">Alien</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+      </section>
+
+      {/* Arena */}
+      {left && right ? (
+        <section className="mt-6">
+          <div className="grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+            <button onClick={() => choose(left.id, right.id)} className="group text-left" aria-label={`Vote ${left.superName}`}>
+              <CharacterPortrait c={left} priority />
+              <p className="mt-2 text-center text-lg font-bold group-hover:underline">
+                {left.superName} <span className="font-normal opacity-60">({left.name})</span>
+              </p>
+              <div className={showStats ? "" : "hidden group-hover:block"}>
+                <StatCard c={left} elo={ratings[left.id]?.elo ?? BASE_ELO} />
+              </div>
+            </button>
+            <div className="text-center font-black opacity-50">OR</div>
+            <button onClick={() => choose(right.id, left.id)} className="group text-left" aria-label={`Vote ${right.superName}`}>
+              <CharacterPortrait c={right} priority />
+              <p className="mt-2 text-center text-lg font-bold group-hover:underline">
+                {right.superName} <span className="font-normal opacity-60">({right.name})</span>
+              </p>
+              <div className={showStats ? "" : "hidden group-hover:block"}>
+                <StatCard c={right} elo={ratings[right.id]?.elo ?? BASE_ELO} />
+              </div>
+            </button>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
+            <button onClick={skipBoth} className="rounded-full border px-4 py-2">Skip both ⟳</button>
+            <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
+            <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
+          </div>
+        </section>
+      ) : (
+        <p className="mt-6 rounded-2xl border p-6 text-center">Not enough characters for this filter — loosen it.</p>
+      )}
+
+      {/* Rankings */}
+      <section className="mt-10">
+        <h2 className="text-xl font-bold">Rankings ({ranked.length})</h2>
+        <ol className="mt-3 grid gap-2 md:grid-cols-2">
+          {ranked.map((c, i) => {
+            const r = ratings[c.id];
+            return (
+              <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
+                <span className="flex items-center gap-2">
+                  <span className="w-7 font-black opacity-60">#{i + 1}</span>
+                  <Link href={`/characters/${c.id}`} className="font-semibold hover:underline">
+                    {c.superName}
+                  </Link>
+                  <span className="opacity-60 capitalize">{c.affiliation} · {c.species}</span>
+                </span>
+                <span className="opacity-80">{r?.elo ?? BASE_ELO} · {r?.wins ?? 0}W/{r?.losses ?? 0}L</span>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    </main>
+  );
+}
