@@ -97,7 +97,7 @@ function VoteCard({
       <p className="mt-2 text-center text-lg font-bold">
         {c.superName} <span className="font-normal opacity-60">({c.name})</span>
       </p>
-      <p className="mt-1 flex items-center justify-center gap-2">
+      <p className="mt-3 flex items-center justify-center gap-2">
         <AffiliationBadge value={c.affiliation} />
         <span
           role="button"
