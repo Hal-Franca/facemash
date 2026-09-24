@@ -51,10 +51,28 @@ function VoteCard({
             <div className="[backface-visibility:hidden]">
               <CharacterPortrait c={c} priority />
             </div>
-            {/* Back of card: same stats block as below the card */}
+            {/* Back of card: same info as below, but dividers between every row */}
             <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-xs text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
               <StatHeading c={c} />
-              <StatDetails c={c} elo={elo} />
+              <dl className="mt-2 space-y-1 opacity-90">
+                <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd className="capitalize">{c.affiliation}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">First appearance:</dt><dd>{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Powers:</dt><dd>{c.powers.join(", ")}</dd></div>
+                <hr className="border-zinc-300 dark:border-zinc-700" />
+                <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
+              </dl>
+              <hr className="my-1 border-zinc-300 dark:border-zinc-700" />
+              <p className="opacity-70">{c.bio}</p>
             </div>
           </div>
         </div>
