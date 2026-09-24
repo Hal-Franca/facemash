@@ -54,16 +54,18 @@ function VoteCard({
               <CharacterPortrait c={c} priority />
             </div>
             {/* Back of card: stats on the card itself */}
-            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-3 text-xs text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
+            <div className="absolute inset-0 flex flex-col justify-center overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-xs text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
               <p className="font-bold">
                 {c.superName} <span className="font-normal opacity-70">({c.name})</span>
               </p>
               <p className="mt-1">
                 <AffiliationBadge value={c.affiliation} />
               </p>
-              <p className="mt-2 opacity-80">{c.universeLabel}</p>
+              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
+              <p className="opacity-80">{c.universeLabel}</p>
               <p className="mt-1 opacity-80">{c.teams.join("; ")}</p>
-              <p className="mt-1">
+              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
+              <p>
                 <span className="font-semibold">Powers: </span>
                 {c.powers.join(", ")}
               </p>
@@ -71,6 +73,8 @@ function VoteCard({
                 First: {c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})
               </p>
               <p className="mt-1 font-semibold">Elo: {elo}</p>
+              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
+              <p className="opacity-70">{c.bio}</p>
             </div>
           </div>
         </div>
