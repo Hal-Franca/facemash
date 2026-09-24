@@ -22,19 +22,17 @@ function useMounted() {
 }
 
 const SELECT_CLS =
-  "rounded-lg border border-zinc-300 bg-white p-2 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
+  "rounded-lg border border-zinc-300 bg-white p-2 pr-8 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
 
 function VoteCard({
   c,
   rating,
   flipEnabled,
-  showBelow,
   onVote,
 }: {
   c: Character;
   rating: Rating | undefined;
   flipEnabled: boolean;
-  showBelow: boolean;
   onVote: () => void;
 }) {
   const [hover, setHover] = useState(false);
@@ -86,7 +84,6 @@ function VoteCard({
           {pinned ? "📌 pinned" : "ⓘ stats"}
         </span>
       </p>
-      {showBelow && <StatCard c={c} elo={elo} />}
     </div>
   );
 }
@@ -99,6 +96,7 @@ export default function Home() {
   const [species, setSpecies] = useState<SpeciesFilter>("all");
   const [flipEnabled, setFlipEnabled] = useState(true);
   const [showBelow, setShowBelow] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10);
 
   const pool = useMemo(
     () =>
@@ -173,7 +171,7 @@ export default function Home() {
       <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm">
           Affiliation
-          <select value={aff} onChange={(e) => setAff(e.target.value as AffFilter)} className={SELECT_CLS}>
+          <select value={aff} onChange={(e) => { setAff(e.target.value as AffFilter); setVisibleCount(10); }} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="hero">Hero</option>
             <option value="anti-hero">Anti-hero</option>
@@ -182,7 +180,7 @@ export default function Home() {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Gender
-          <select value={gender} onChange={(e) => setGender(e.target.value as GenderFilter)} className={SELECT_CLS}>
+          <select value={gender} onChange={(e) => { setGender(e.target.value as GenderFilter); setVisibleCount(10); }} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -191,7 +189,7 @@ export default function Home() {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Species
-          <select value={species} onChange={(e) => setSpecies(e.target.value as SpeciesFilter)} className={SELECT_CLS}>
+          <select value={species} onChange={(e) => { setSpecies(e.target.value as SpeciesFilter); setVisibleCount(10); }} className={SELECT_CLS}>
             <option value="all">All</option>
             <option value="human">Human</option>
             <option value="meta-human">Meta-human</option>
@@ -204,19 +202,26 @@ export default function Home() {
       {/* Arena */}
       {left && right ? (
         <section className="mt-6">
-          <div className="grid gap-6 sm:grid-cols-[1fr_auto_1fr]">
-            <div>
-              <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(left.id, right.id)} />
+          {/* Row 1: portraits (+OR). Row 2: stats + per-card skips. Middle stays centered on the portraits. */}
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[1fr_auto_1fr] sm:items-start">
+            <div className="order-1">
+              <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} onVote={() => choose(left.id, right.id)} />
+            </div>
+            <div className="order-3 flex flex-row items-center justify-center gap-2 sm:order-2 sm:min-w-28 sm:flex-col sm:gap-3 sm:self-center">
+              <div className="font-black opacity-50">OR</div>
+              <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
+            </div>
+            <div className="order-4 sm:order-3">
+              <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} onVote={() => choose(right.id, left.id)} />
+            </div>
+            <div className="order-2 sm:order-4">
+              {showBelow && <StatCard c={left} elo={rOf(left.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
               </p>
             </div>
-            <div className="flex flex-row items-center justify-center gap-2 sm:min-w-28 sm:flex-col sm:gap-3">
-              <div className="font-black opacity-50">OR</div>
-              <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
-            </div>
-            <div>
-              <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(right.id, left.id)} />
+            <div className="order-5">
+              {showBelow && <StatCard c={right} elo={rOf(right.id)?.elo ?? BASE_ELO} />}
               <p className="mt-3 text-center text-sm">
                 <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
               </p>
@@ -236,8 +241,9 @@ export default function Home() {
       {/* Rankings */}
       <section className="mt-10">
         <h2 className="text-xl font-bold">Rankings ({ranked.length})</h2>
+        <p className="mt-1 text-sm opacity-60">Showing {Math.min(visibleCount, ranked.length)} of {ranked.length}</p>
         <ol className="mt-3 grid gap-2 md:grid-cols-2">
-          {ranked.map((c, i) => {
+          {ranked.slice(0, visibleCount).map((c, i) => {
             const r = rOf(c.id);
             return (
               <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
@@ -254,6 +260,20 @@ export default function Home() {
             );
           })}
         </ol>
+        {visibleCount < ranked.length ? (
+          <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
+            <button onClick={() => setVisibleCount((v) => v + 20)} className="rounded-full border px-4 py-2">
+              Show 20 more ({ranked.length - visibleCount} left)
+            </button>
+            <button onClick={() => setVisibleCount(ranked.length)} className="rounded-full border px-4 py-2">
+              Show all ({ranked.length})
+            </button>
+          </div>
+        ) : ranked.length > 10 ? (
+          <div className="mt-4 flex justify-center text-sm">
+            <button onClick={() => setVisibleCount(10)} className="rounded-full border px-4 py-2">Show less</button>
+          </div>
+        ) : null}
       </section>
     </main>
   );
