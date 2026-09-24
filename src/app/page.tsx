@@ -223,14 +223,22 @@ export default function Home() {
       {left && right ? (
         <section className="mt-6">
           <div className="grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-start">
-            <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(left.id, right.id)} />
-            <div className="pt-24 text-center font-black opacity-50 sm:pt-40">OR</div>
-            <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(right.id, left.id)} />
-          </div>
-          <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
-            <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
-            <button onClick={skipBoth} className="rounded-full border px-4 py-2">Skip both ⟳</button>
-            <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
+            <div>
+              <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(left.id, right.id)} />
+              <p className="mt-3 text-center text-sm">
+                <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
+              </p>
+            </div>
+            <div className="flex flex-row items-center justify-center gap-2 pt-0 sm:flex-col sm:gap-3 sm:pt-40">
+              <div className="font-black opacity-50">OR</div>
+              <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
+            </div>
+            <div>
+              <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow} onVote={() => choose(right.id, left.id)} />
+              <p className="mt-3 text-center text-sm">
+                <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
+              </p>
+            </div>
           </div>
         </section>
       ) : mounted ? (
