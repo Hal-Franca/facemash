@@ -6,7 +6,7 @@ import type { Affiliation, Character, Gender, Rating, Species } from "@/data/typ
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard, StatHeading } from "@/components/CharacterCard";
 
 type AffFilter = Affiliation | "all";
 type GenderFilter = Gender | "all";
