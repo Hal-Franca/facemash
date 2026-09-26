@@ -34,7 +34,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Your data",
-    body: "Votes store in your browser by default (subtitle reads “stored locally”). Once the shared board is live it reads “shared global board” and your votes sync across devices.",
+    body: "Every vote saves to the shared global board, so rankings reflect all voters on all devices. A local copy keeps the app instant and working offline.",
   },
 ];
 
