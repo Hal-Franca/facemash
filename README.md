@@ -47,9 +47,17 @@ Fields are validated by `scripts/validate-roster.ts`.
 
 ## Images & licensing
 
-No copyrighted art is bundled. `image.url` is `null` for all 30 MVP characters;
+No copyrighted art is bundled. `image.url` is `null` for all 88 MVP characters;
 UI renders a consistent-size initial placeholder (`CharacterPortrait`).
 This keeps the repo legal and images uniform (600×800, 3:4 `object-cover`).
+
+Raw art lives outside the repo; standardized copies are imported with:
+
+```bash
+node scripts/import-images.mjs "C:/path/to/raw/img"  # -> public/images/comics/dc/*.webp (600x800)
+```
+
+250 portraits are already imported there. Wiring `image.url` per character is next.
 
 To add real art later (per character):
 
