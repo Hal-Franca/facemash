@@ -113,6 +113,28 @@ function SideCard({
         <p className="text-center text-lg font-bold">
           {c.superName} <span className="font-normal opacity-60">({c.name})</span>
         </p>
+      </div>
+      <div className={portraitCls} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
+        <div className="[perspective:1200px]">
+          <div
+            className="relative transition-transform duration-300 [transform-style:preserve-3d]"
+            style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
+          >
+            <div className="[backface-visibility:hidden]">
+              <CharacterPortrait c={c} priority />
+            </div>
+            {/* Back of card: shared stats block (dividers included) */}
+            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-sm text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
+              <StatHeading c={c} />
+              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
+              <StatDetails c={c} elo={elo} />
+            </div>
+          </div>
+        </div>
+        </button>
+      </div>
+      <div className={belowCls}>
         <p className="mt-3 flex items-center justify-center gap-2">
           <AffiliationBadge value={c.affiliation} />
           <span className="text-sm capitalize opacity-60">{c.species}</span>
@@ -136,28 +158,6 @@ function SideCard({
             {pinned ? "📌 pinned" : "ⓘ stats"}
           </span>
         </p>
-      </div>
-      <div className={portraitCls} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-        <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
-        <div className="[perspective:1200px]">
-          <div
-            className="relative transition-transform duration-300 [transform-style:preserve-3d]"
-            style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
-          >
-            <div className="[backface-visibility:hidden]">
-              <CharacterPortrait c={c} priority />
-            </div>
-            {/* Back of card: shared stats block (dividers included) */}
-            <div className="absolute inset-0 overflow-y-auto rounded-2xl border border-zinc-300 bg-zinc-100 p-4 text-left text-sm text-zinc-900 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
-              <StatHeading c={c} />
-              <hr className="my-2 border-zinc-300 dark:border-zinc-700" />
-              <StatDetails c={c} elo={elo} />
-            </div>
-          </div>
-        </div>
-        </button>
-      </div>
-      <div className={belowCls}>
         {showBelow && <StatCard c={c} elo={elo} />}
         <p className="mt-3 text-center text-sm">
           <button onClick={onSkip} className="rounded-full border px-4 py-2">{skipLabel}</button>
