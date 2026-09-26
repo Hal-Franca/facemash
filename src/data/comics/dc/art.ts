@@ -30,7 +30,7 @@ export const ART: Record<string, string> = {
   "dc-red-tornado": "Red Tornado - John Smith.webp",
   "dc-vixen": "Vixen - Mari Jiwe McCabe.webp",
   "dc-plastic-man": "Plastic Man - Patrick Edward O'Brian.webp",
-  "dc-mister-terrific": "Mr. Terrific - Michael Holt.webp",
+  "dc-mr-terrific": "Mr. Terrific - Michael Holt.webp",
   "dc-captain-atom": "Captain Atom - Nathaniel Christopher Adam.webp",
   "dc-power-girl": "Power Girl - Kara Zor-L - Karen Starr.webp",
   "dc-stargirl": "Stargirl - Courtney Elizabeth Whitmore.webp",
