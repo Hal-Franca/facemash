@@ -190,6 +190,7 @@ export const dcHeroesExtra: Character[] = [
     ["Danger sense", "Flight", "Calm aura"], "Hawk and Dove", "#1", 1988, "Avatar of peace."),
 ];
 
-// Per-character portrait framing overrides (CSS object-position; default is top).
-// Lucius Fox's art is a tight face close-up: center it so the frame doesn't clip his head.
-dcHeroesExtra.find((c) => c.id === "dc-lucius")!.image.focus = "center";
+// Per-character portrait framing overrides (default is top-anchored cover crop).
+// Lucius Fox's art is a wide close-up: letterbox the whole face instead of slicing it.
+const lucius = dcHeroesExtra.find((c) => c.id === "dc-lucius")!;
+lucius.image.fit = "contain";

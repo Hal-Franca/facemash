@@ -30,6 +30,7 @@ function initials(c: Character) {
 /** Fixed 3:4 aspect, responsive, consistent size. Uses remote art when licensed, else styled placeholder. */
 export function CharacterPortrait({ c, priority = false }: { c: Character; priority?: boolean }) {
   if (c.image.url) {
+    const contain = c.image.fit === "contain";
     return (
       // Plain <img> on purpose: art dimensions vary by source; CSS enforces uniform 3:4 crop.
       // encodeURI: files keep their original "Super - Name" spelling (spaces, quotes).
@@ -38,8 +39,12 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
         src={encodeURI(c.image.url)}
         alt={c.image.alt}
         loading={priority ? "eager" : "lazy"}
-        style={c.image.focus ? { objectPosition: c.image.focus } : undefined}
-        className="aspect-[3/4] w-full rounded-2xl object-cover object-top"
+        style={c.image.focus && !contain ? { objectPosition: c.image.focus } : undefined}
+        className={
+          contain
+            ? "aspect-[3/4] w-full rounded-2xl bg-zinc-200 object-contain dark:bg-zinc-800"
+            : "aspect-[3/4] w-full rounded-2xl object-cover object-top"
+        }
       />
     );
   }

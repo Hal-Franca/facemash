@@ -18,6 +18,8 @@ export interface CharacterImage {
   credit?: string;
   /** CSS object-position override for the portrait frame (default top-anchored). */
   focus?: string;
+  /** "contain" letterboxes the full image instead of cover-cropping (for wide close-ups). */
+  fit?: "cover" | "contain";
 }
 
 export interface Character {
