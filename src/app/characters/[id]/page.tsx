@@ -22,12 +22,12 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
       <Link href="/" className="text-sm underline opacity-70">← Back to arena</Link>
       <h1 className="mt-2 text-3xl font-black">{c.superName}</h1>
       <p className="opacity-70">{c.name} · {c.universe.toUpperCase()} · {c.category}</p>
-      {/* Stacked on mobile (unchanged); side-by-side on desktop */}
-      <div className="mt-4 grid gap-6 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] sm:items-start">
+      {/* Stacked on mobile (unchanged); side-by-side on desktop, stat box matches image height */}
+      <div className="mt-4 grid gap-6 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="mx-auto w-full max-w-sm">
           <CharacterPortrait c={c} priority />
         </div>
-        <StatCard c={c} className="sm:mt-0" />
+        <StatCard c={c} className="sm:mt-0 sm:h-full sm:text-base" />
       </div>
     </main>
   );

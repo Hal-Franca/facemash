@@ -67,7 +67,7 @@ export function StatCard({ c, elo, className = "" }: { c: Character; elo?: numbe
 /** Name heading shared by the below-card stats and the flip-card back. */
 export function StatHeading({ c }: { c: Character }) {
   return (
-    <p className="text-base font-bold">
+    <p className="text-base font-bold sm:text-lg">
       {c.superName} <span className="font-normal opacity-70">({c.name})</span>
     </p>
   );
