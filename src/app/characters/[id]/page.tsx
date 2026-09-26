@@ -33,7 +33,7 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6">
       <SiteHeader />
-      <Link href="/" className="mt-3 inline-block text-sm underline opacity-70">← Back to arena</Link>
+      <Link href="/dc/arena" className="mt-3 inline-block text-sm underline opacity-70">← Back to arena</Link>
       <h1 className="mt-2 text-3xl font-black">{c.superName}</h1>
       <p className="opacity-70">{c.name} · {c.universe.toUpperCase()} · {c.category}</p>
       <p className="mt-2 flex items-center gap-2">

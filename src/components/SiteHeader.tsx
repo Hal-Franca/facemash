@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import { useTheme } from "@/components/ThemeProvider";
 const NAV = [
-  { href: "/", label: "Arena" },
-  { href: "/roster", label: "Roster" },
-  { href: "/ladder", label: "Ladder" },
+  { href: "/dc/arena", label: "Arena" },
+  { href: "/dc/roster", label: "Roster" },
+  { href: "/dc/ladder", label: "Ladder" },
 ];
 
 /** Global top bar: universe logo, title, hamburger drawer (Arena/Roster/Ladder). */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { toggle } = useTheme();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,7 +34,7 @@ export function SiteHeader() {
         >
           ☰
         </button>
-        <Link href="/" className="flex items-center gap-2" aria-label="Facemash home">
+        <Link href="/dc/arena" className="flex items-center gap-2" aria-label="Facemash home">
           <Image
             src="/images/logo-dc.png"
             alt="DC Universe logo"
@@ -81,6 +82,13 @@ export function SiteHeader() {
               <p className="px-3 font-semibold uppercase tracking-wide">Universe</p>
               <p className="mt-1 px-3">DC Universe</p>
             </div>
+            <button
+              onClick={toggle}
+              aria-label="Toggle light and dark theme"
+              className="mt-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold"
+            >
+              🌓 Light / Dark
+            </button>
           </nav>
         </div>
       )}

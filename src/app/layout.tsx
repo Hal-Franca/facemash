@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BackToTop } from "@/components/BackToTop";
 
 export const metadata: Metadata = {
   title: "Facemash — DC Supers",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-white text-zinc-950 antialiased dark:bg-zinc-950 dark:text-zinc-50">
         <ThemeProvider>
           {children}
+          <BackToTop />
           <footer className="mx-auto w-full max-w-6xl px-4 pb-8 text-center text-xs opacity-70">
             <p>
               © {year}{" "}
