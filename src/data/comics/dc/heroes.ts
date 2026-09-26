@@ -117,7 +117,7 @@ export const dcHeroes: Character[] = [
   hero("dc-plastic-man", "Plastic Man", "Patrick O’Brian", E0, ["Justice League"], "male", "meta-human",
     ["Elastic body", "Shapeshifting", "Invulnerability"],
     "Police Comics", "#1", 1941, "Reformed crook turned stretchy prankster."),
-  hero("dc-mister-terrific", "Mister Terrific", "Michael Holt", E0, ["Justice Society of America"], "male", "human",
+  hero("dc-mr-terrific", "Mr. Terrific", "Michael Holt", E0, ["Justice Society of America"], "male", "human",
     ["Genius intellect", "T-Spheres", "Martial arts"],
     "Spectre", "#54", 1997, "Third-smartest man alive, JSA chair."),
   hero("dc-captain-atom", "Captain Atom", "Nathaniel Adam", E0, ["Justice League"], "male", "other",
