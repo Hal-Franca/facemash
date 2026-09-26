@@ -118,7 +118,7 @@ function SideCard({
         <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
         <div className="[perspective:1200px]">
           <div
-            className="relative transition-transform duration-500 [transform-style:preserve-3d]"
+            className="relative transition-transform duration-[400ms] [transform-style:preserve-3d]"
             style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
           >
             <div className="[backface-visibility:hidden]">
