@@ -55,17 +55,22 @@ export function RankRow({
   losses: number;
 }) {
   return (
-    <li className="flex flex-col gap-1 rounded-xl border px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+    <li className="flex min-w-0 flex-col gap-1 rounded-xl border px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-3">
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <span className="w-10 shrink-0 font-black opacity-60">#{rank}</span>
         <Link href={`/characters/${c.id}`} className="truncate font-semibold hover:underline">
           {c.superName} <span className="font-normal opacity-60">({c.name})</span>
         </Link>
-        <AffiliationBadge value={c.affiliation} />
+        <span className="hidden sm:inline-flex">
+          <AffiliationBadge value={c.affiliation} />
+        </span>
         <span className="hidden shrink-0 capitalize opacity-60 sm:inline">{c.species}</span>
       </span>
-      <span className="pl-12 text-xs opacity-80 sm:hidden">
-        {elo} · {wins}W/{losses}L
+      <span className="flex items-center gap-2 pl-12 text-xs opacity-80 sm:hidden">
+        <AffiliationBadge value={c.affiliation} />
+        <span className="whitespace-nowrap">
+          {elo} · {wins}W/{losses}L
+        </span>
       </span>
       <span className="hidden shrink-0 whitespace-nowrap opacity-80 sm:inline">
         {elo} · {wins}W/{losses}L
