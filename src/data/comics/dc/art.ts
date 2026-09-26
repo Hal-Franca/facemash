@@ -210,6 +210,7 @@ export const ART: Record<string, string> = {
   "dc-count-vertigo": "Count 'Werner' Vertigo - Werner Zytle.webp",
   "dc-cyborg-superman": "Cyborg Superman - Hank Henshaw.webp",
   "dc-cyborg-superman-zorel": "Cyborg Superman - Zor-El.webp",
+  "dc-cheshire": "Cheshire - Jade Nguyen.webp",
   "dc-damien-darhk": "Damien Darhk.webp",
   "dc-deathstorm": "Deathstorm - Martin Stein.webp",
   "dc-despero": "Despero.webp",

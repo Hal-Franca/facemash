@@ -138,6 +138,8 @@ export const dcVillainsExtra: Character[] = [
     ["Thinking cap", "Telepathy"], "All-Flash", "#12", 1943, "Scheming mind-capped mastermind."),
   v("dc-cyborg-superman-zorel", "Cyborg Superman", "Zor-El", E0, ["Brainiac"], "male", "other",
     ["Technopathy", "Kryptonian powers"], "Supergirl", "#5", 2012, "Supergirl's father rebuilt as Brainiac's scout."),
+  v("dc-cheshire", "Cheshire", "Jade Nguyen", E0, ["League of Assassins", "Secret Six"], "female", "human",
+    ["Martial arts mastery", "Poisons"], "New Teen Titans Annual", "#2", 1983, "Deadliest assassin, Roy Harper's nemesis."),
 ];
 
 // Per-character portrait framing overrides (default is top-anchored cover crop).
