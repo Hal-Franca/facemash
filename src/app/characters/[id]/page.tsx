@@ -1,9 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { catalog, getCharacter } from "@/data";
 import { AffiliationBadge, CharacterPortrait, StatCard } from "@/components/CharacterCard";
 
 export function generateStaticParams() {
   return catalog.map((c) => ({ id: c.id }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const c = getCharacter(id);
+  if (!c) return { title: "Facemash - DC - Not found" };
+  const who = c.name && c.name !== c.superName ? `${c.superName} (${c.name})` : c.superName;
+  return {
+    title: `Facemash - DC - ${who}`,
+    description: `${who}: ${c.affiliation}, ${c.species}. ${c.bio}`,
+  };
 }
 
 export default async function CharacterPage({ params }: { params: Promise<{ id: string }> }) {
