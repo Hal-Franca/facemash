@@ -94,7 +94,7 @@ export const dcAntiHeroes: Character[] = [
   antiHero("dc-apollo", "Apollo", "Andrew Pulaski", "WildStorm / DC Universe", ["The Authority"], "male", "meta-human",
     ["Solar powers", "Flight", "Super strength"],
     "Stormwatch", "#4", 1994, "Solar Superman of the Authority."),
-  antiHero("dc-question", "The Question", "Vic Sage", E0, ["Independent vigilante", "Justice League"], "male", "human",
+  antiHero("dc-question", "The Question", "Charles Victor Szasz", E0, ["Independent vigilante", "Justice League"], "male", "human",
     ["Investigation", "Pseudoderm mask", "Martial arts"],
     "Blue Beetle", "#1", 1967, "Faceless conspiracy-busting detective."),
   antiHero("dc-black-orchid", "Black Orchid", "Susan Linden", E0, ["Justice League Dark", "Independent"], "female", "other",
