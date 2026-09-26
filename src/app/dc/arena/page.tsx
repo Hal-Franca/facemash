@@ -236,12 +236,13 @@ export default function Home() {
               belowCls="order-3 flex flex-col sm:order-6 sm:col-start-1 sm:row-start-3"
             />
             <div className="order-4 flex flex-col items-center justify-center gap-2 sm:col-start-2 sm:row-start-2 sm:min-w-28 sm:gap-3 sm:self-center">
-              <div className="flex w-full items-center gap-3 sm:w-auto">
-                <span className="h-px flex-1 bg-zinc-300 sm:hidden dark:bg-zinc-700" aria-hidden="true" />
-                <div className="font-black opacity-50">OR</div>
-                <span className="h-px flex-1 bg-zinc-300 sm:hidden dark:bg-zinc-700" aria-hidden="true" />
+              <div className="hidden font-black opacity-50 sm:block">OR</div>
+              <div className="flex w-full items-center gap-3 sm:hidden">
+                <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
+                <button onClick={skipBoth} className="shrink-0 rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
+                <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
               </div>
-              <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
+              <button onClick={skipBoth} className="hidden rounded-full border px-4 py-2 text-sm sm:inline-flex">Skip both ⟳</button>
             </div>
             <SideCard
               c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow}
