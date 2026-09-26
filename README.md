@@ -39,34 +39,43 @@ manually), then `npm run dev`.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm test           # vitest (Elo unit tests)
-npm run validate:roster  # 30-character data check
+npm test           # vitest (Elo, ranking, catalog, filters)
+npm run validate:roster  # 250-character data check
 npm run lint
 npm run build
 ```
 
-## What it does (MVP)
+## What it does
 
-- 1v1 arena, click to vote, Elo rating (K=32, base 1400) — `src/lib/elo.ts:1`
-- Rankings with W/L + Elo, filterable by affiliation / gender / species
-- Skip: both sides ⟳, keep-left, keep-right
-- Hover/toggle stat card: super name, civil name, first appearance
-  (comic + issue + year), powers, affiliation, gender, species, bio
-- Character page: `/characters/[id]`
-- Dark default + light toggle, responsive mobile-first, 3:4 portraits
+- 1v1 arena (`/dc/arena`), click to vote, Elo rating (K=32, base 1400 FIDE floor) — `src/lib/elo.ts:1`
+- Rankings: Elo → wins → battles → A–Z, competition ranks (`#1, #2A, #2B…`),
+  SC2-style tiers (bronze→diamond bands, Grandmaster = top-20 rows) — `src/lib/ranking.ts:1`
+- Skip: both sides ⟳, keep-left, keep-right; per-card skip buttons under portraits
+- Flip-card stats (adjustable speed, pinnable) + optional stats-below; hover/tap stat
+  card: super name, civil name, universe, affiliation badge, teams, gender, species,
+  first appearance (comic + issue + year), powers, Elo, bio
+- Filters (affiliation / gender / species) + name search on roster + ladder
+- Home top-20, full `/dc/roster` (image grid, A–Z/Z–A/rank sort, rank chips),
+  full `/dc/ladder` (text board), character pages `/dc/characters/[id]` with tab titles
+- Side drawer nav (Arena/Roster/Ladder) + DC logo header, per-page theme toggle,
+  floating back-to-top, dark default + light mode, responsive mobile-first 3:4 portraits
 
 ## Data layout (extensible — don't redo later)
 
 ```text
 src/data/
-  types.ts                 # Character, Affiliation, Gender, Species
-  index.ts                 # catalog[] aggregator
-  comics/dc/heroes.ts      # 30 heroes (your roster)
-  comics/dc/villains.ts    # 30 villains (your roster)
-  comics/dc/anti-heroes.ts # 28 anti-heroes (your 30 minus Ra's+Talia, kept once as villains)
-  comics/marvel/           # future — same shape
-  anime/                   # future — same shape
-public/images/comics/dc/<id>.webp  # future licensed art (placeholders for now)
+  types.ts                   # Character, Affiliation, Gender, Species
+  index.ts                   # catalog[] aggregator (250: 118 heroes + 86 villains + 40 anti + 6 other)
+  comics/dc/heroes.ts        # original 30 heroes
+  comics/dc/villains.ts      # original 30 villains
+  comics/dc/anti-heroes.ts   # original 28 anti-heroes (Ra's+Talia kept once as villains)
+  comics/dc/heroes-extra.ts  # +88 heroes (+6 cosmic/other)
+  comics/dc/villains-extra.ts# +56 villains (incl. Earth-3 Crime Syndicate)
+  comics/dc/anti-heroes-extra.ts # +12 anti-heroes
+  comics/dc/art.ts           # id → portrait file map (250 wired, 0 missing)
+  comics/marvel/             # future — same shape
+  anime/                     # future — same shape
+public/images/comics/dc/"Super - Name".webp  # 251 portraits, uncropped webp
 ```
 
 Add a universe by adding one folder + one import in `src/data/index.ts`.
@@ -74,9 +83,12 @@ Fields are validated by `scripts/validate-roster.ts`.
 
 ## Images & licensing
 
-No copyrighted art is bundled. `image.url` is `null` for all 88 MVP characters;
-UI renders a consistent-size initial placeholder (`CharacterPortrait`).
-This keeps the repo legal and images uniform (600×800, 3:4 `object-cover`).
+Character artwork © DC Comics, sourced via Comic Vine for identification on a
+non-commercial fan/educational demo (see footer disclaimer). `image.url` is wired
+for all 250 catalog characters; anything unmapped falls back to a consistent-size
+initial placeholder (`CharacterPortrait`). Files stay uncropped and uniform-ish
+(fit inside 600×800, 3:4 `object-cover`, top-anchored, per-character `focus`/`fit`
+overrides where needed).
 
 Raw art lives outside the repo; standardized copies are imported with:
 
@@ -84,19 +96,13 @@ Raw art lives outside the repo; standardized copies are imported with:
 node scripts/import-images.mjs "C:/path/to/raw/img"  # -> public/images/comics/dc/*.webp (fit inside 600x800, no crop; framing is CSS-only)
 ```
 
-253 portraits are already imported there. All 226 catalog characters have art
-wired via `src/data/comics/dc/art.ts` (id → file). Fan-curated data: first
-appearances/powers verified for major characters, best-effort for obscure ones.
+250 of 250 portraits wired via `src/data/comics/dc/art.ts` (id → file), 0 missing.
+Fan-curated data: first appearances/powers verified for major characters,
+best-effort for obscure ones.
 
-To add real art later (per character):
-
-1. Only use art you own/license, or DC-official press-kit / Wikimedia with
-   attribution. Store credit in `image.credit`.
-2. Resize to **600×800 webp, <200KB**, save as `public/images/comics/dc/<id>.webp`.
-3. Set `image.url` to `/images/comics/dc/<id>.webp`.
-4. Good comics-knowledge sources for *info/bio research* (not hotlinking):
-   DC Comics official encyclopedia, DC Database Wiki, Comic Vine, League of
-   Comic Geeks — link/credit them, don't scrape-hotlink their binaries.
+Good comics-knowledge sources for *info/bio research* (not hotlinking):
+DC Comics official encyclopedia, DC Database Wiki, Comic Vine, League of
+Comic Geeks — link/credit them, don't scrape-hotlink their binaries.
 
 ## Hosting: Vercel vs Cloudflare Pages vs GitHub Pages
 
@@ -123,5 +129,6 @@ SSG). If you outgrow Vercel DB costs, migrate data layer to Cloudflare D1 —
 
 ## Roadmap
 
-See `KANBAN.md`. Next: global votes backend (Vercel KV/Upstash or D1),
-admin CRUD, PT-BR i18n, Marvel + Anime universes.
+See `KANBAN.md` + board (`.devtool/features/`). Shipped global board API
+(`GET /api/ratings`, `POST /api/vote`, Vercel Postgres); remaining: provision DB,
+admin CRUD, PT-BR i18n, Marvel + Anime universes, guessing game, tag system.
