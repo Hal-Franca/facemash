@@ -187,7 +187,7 @@ export default function Home() {
           Who wins? Click to vote. Elo-ranked, {mode === "global" ? "shared global board" : "stored locally"}.
         </p>
         <div className="flex flex-wrap gap-2">
-          <button onClick={() => setFlipEnabled((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={flipEnabled}>
+          <button onClick={() => setFlipEnabled((s) => !s)} className="hidden rounded-full border px-4 py-2 text-sm lg:inline-block" aria-pressed={flipEnabled}>
             {flipEnabled ? "🂠 Flip: on" : "🂠 Flip: off"}
           </button>
           <button onClick={() => setShowBelow((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={showBelow}>
