@@ -79,7 +79,7 @@ export function SiteHeader() {
             ))}
             <div className="mt-4 border-t border-zinc-200 pt-3 text-xs opacity-60 dark:border-zinc-800">
               <p className="px-3 font-semibold uppercase tracking-wide">Universe</p>
-              <p className="mt-1 px-3">DC Universe (Marvel, Anime later)</p>
+              <p className="mt-1 px-3">DC Universe</p>
             </div>
           </nav>
         </div>
