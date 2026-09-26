@@ -142,4 +142,4 @@ export const dcVillainsExtra: Character[] = [
 
 // Per-character portrait framing overrides (default is top-anchored cover crop).
 // Eclipso's art has dead white space on top and his title logo at the bottom.
-dcVillainsExtra.find((c) => c.id === "dc-eclipso")!.image.focus = "50% 80%";
+dcVillainsExtra.find((c) => c.id === "dc-eclipso")!.image.focus = "50% 70%";
