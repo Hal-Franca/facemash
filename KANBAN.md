@@ -27,7 +27,8 @@ Cards live in the **Kanban Markdown board**, not in this file:
 
 ## Current snapshot (see board for live state)
 
-- Shipped: scaffold, data model, 226-character catalog with wired portraits,
+- Shipped: scaffold, data model, 248-character catalog (118 heroes + 84 villains + 40 anti-heroes
+  + 6 other) with wired portraits,
   Elo engine + tests, arena + rankings + filters + pagination, dark/light +
   responsive, flip cards + badges, hydration fix, README/validation/green builds,
   footer + image disclaimer.
