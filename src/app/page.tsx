@@ -332,7 +332,7 @@ export default function Home() {
                 <span className="flex items-center gap-2">
                   <span className="w-10 font-black opacity-60">#{r.rank}</span>
                   <Link href={`/characters/${c.id}`} className="font-semibold hover:underline">
-                    {c.superName}
+                    {c.superName} <span className="font-normal opacity-60">({c.name})</span>
                   </Link>
                   <AffiliationBadge value={c.affiliation} />
                   <span className="opacity-60 capitalize">{c.species}</span>
