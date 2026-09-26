@@ -17,8 +17,12 @@ const SECTIONS: { title: string; body: string }[] = [
     body: "Don't know one side? Skip right (keep left), skip left (keep right), or skip both for a fresh pair. Skips never touch ratings.",
   },
   {
-    title: "Rankings & tiers",
-    body: "Order is Elo, then wins, then battles, then A–Z, with shared ranks shown as #2A, #2B. Tiers run Bronze to Diamond by Elo band; Grandmaster is the top-20 rows with at least 5 battles. Home shows the top 20 — the full boards live on Roster and Ladder.",
+    title: "Rankings",
+    body: "Order is Elo, then wins, then battles, then A–Z. Home shows the top 20 — the full boards live on Roster and Ladder.",
+  },
+  {
+    title: "Reading ranks",
+    body: "Tied characters share a rank number with a letter each, and numbering skips ahead: #1A and #1B are tied for first, then comes #3, #4, then a tie at #5A and #5B, then #7. Letters follow alphabetical order within each tie.",
   },
   {
     title: "Filters & search",
