@@ -49,7 +49,7 @@ export function useBoard(aff: AffFilter, gender: GenderFilter, species: SpeciesF
     [aff, gender, species]
   );
   const poolIds = useMemo(() => pool.map((c) => c.id), [pool]);
-  const { ratings } = useRatings(poolIds);
+  const { ratings, mode } = useRatings(poolIds);
 
   const rOf = (id: string): Rating | undefined => (mounted ? ratings[id] : undefined);
 
@@ -69,5 +69,5 @@ export function useBoard(aff: AffFilter, gender: GenderFilter, species: SpeciesF
   );
   const byId = useMemo(() => new Map(pool.map((c) => [c.id, c])), [pool]);
 
-  return { mounted, pool, ranked, byId, rOf };
+  return { mounted, pool, ranked, byId, rOf, mode };
 }

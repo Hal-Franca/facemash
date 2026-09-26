@@ -18,9 +18,21 @@ further: best of the Bat-Family? Of the Lanterns? Of villains?
 **Why DC first:** 250 DC characters are the template. Once the design, ranking
 engine and data model are proven here, Marvel and anime plug into the same system.
 
-Live demo goal: free, always-on, no manual wake-ups. Votes are local-first
-(`localStorage`); global backend is a later sprint. Deploys on **Vercel**
-(App Router + SSG, security headers in `next.config.ts`). All testing local for now.
+Votes apply instantly locally, then sync to the server board when a database is
+configured — the header shows "shared global board" vs "stored locally".
+Without `POSTGRES_URL`, everything stays in `localStorage` (nothing breaks).
+Deploys on **Vercel** (App Router + SSG, security headers in `next.config.ts`).
+
+## Global board setup (Vercel Postgres, free tier)
+
+1. Vercel dashboard → Storage → Create Database → Postgres → connect this project.
+   This injects `POSTGRES_URL` (preview + production envs).
+2. Open the database Query tab and run `scripts/schema.sql` once.
+3. Redeploy. Votes now POST to `/api/vote` (server-side Elo, validated
+   character ids) and boards load from `/api/ratings`.
+
+Local dev against a DB: `npm i -g vercel; vercel env pull` (or set `POSTGRES_URL`
+manually), then `npm run dev`.
 
 ## Quickstart
 

@@ -155,7 +155,7 @@ export default function Home() {
   );
   const poolIds = useMemo(() => pool.map((c) => c.id), [pool]);
 
-  const { ratings, vote } = useRatings(poolIds);
+  const { ratings, vote, mode } = useRatings(poolIds);
   const [pair, setPair] = useState<[string, string] | null>(null);
   // Client-only randomness: null until mounted, so server + hydration HTML match.
   const activePair = useMemo(() => {
@@ -205,7 +205,9 @@ export default function Home() {
     <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6">
       <SiteHeader />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="opacity-70">Who wins? Click to vote. Elo-ranked, stored locally.</p>
+        <p className="opacity-70">
+          Who wins? Click to vote. Elo-ranked, {mode === "global" ? "shared global board" : "stored locally"}.
+        </p>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setFlipEnabled((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={flipEnabled}>
             {flipEnabled ? "🂠 Flip: on" : "🂠 Flip: off"}
