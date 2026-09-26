@@ -11,6 +11,6 @@ labels: ["devops"]
 order: "a4"
 ---
 
-# develop branch + CI + branch protection
+# CI + branch protection (flow: feature/* → dev → staging → prod)
 
-`develop` exists locally; add CI running lint/test/validate/build on PRs, require green checks + PR review on `main`, document `feature/*` flow.
+Branches `dev`/`staging`/`prod` exist locally (Vercel Production = `prod`). Add CI running lint/test/validate/build on PRs, require green checks + PR review, document the flow. Per-env Postgres (see `.env.example`) keeps test votes off prod data.

@@ -36,5 +36,9 @@ Cards live in the **Kanban Markdown board**, not in this file:
 - Shipped this round: README story, DC logo header + side drawer (Arena/Roster/Ladder),
   home top-20 lock, `/roster` (images, A–Z/Z–A/rank, filters, rank chips), `/ladder` (full text board).
 - Next (To Do): global votes backend, admin CRUD, anti-bot, Playwright E2E,
-  `develop` + CI + branch protection.
+  CI + branch protection.
+- Flow: `feature/*` → `dev` → `staging` → `prod`. Vercel Production tracks `prod`;
+  `staging`/`dev` get their own Postgres (see `.env.example`) so test votes never
+  touch prod MMR, ratings, or W/L. Push: `git push origin dev staging prod`.
+- Defaults: theme Dark, Flip Off, Stats-below Off.
 - Backlog: PT-BR i18n, Marvel universe, Anime, PWA/share/SEO, Glicko-2 + seasons.

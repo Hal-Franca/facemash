@@ -81,7 +81,7 @@ function RosterInner() {
           return (
             <li key={c.id}>
               <Link
-                href={`/characters/${c.id}`}
+                href={`/dc/characters/${c.id}`}
                 className="block rounded-2xl border p-3 hover:border-zinc-500"
               >
                 <CharacterPortrait c={c} />

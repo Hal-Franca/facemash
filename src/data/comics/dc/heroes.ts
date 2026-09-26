@@ -51,7 +51,7 @@ export const dcHeroes: Character[] = [
   hero("dc-flash-barry", "The Flash", "Barry Allen", E0, ["Justice League", "Flash Family"], "male", "meta-human",
     ["Speed Force", "Time travel", "Phasing"],
     "Showcase", "#4", 1956, "Forensic scientist, the fastest man alive."),
-  hero("dc-green-lantern-hal", "Green Lantern", "Hal Jordan", E0, ["Green Lantern Corps", "Justice League"], "male", "human",
+  hero("dc-hal-jordan", "Green Lantern", "Hal Jordan", E0, ["Green Lantern Corps", "Justice League"], "male", "human",
     ["Power ring constructs", "Flight", "Space survival"],
     "Showcase", "#22", 1959, "Test pilot and Green Lantern Corps officer."),
   hero("dc-aquaman", "Aquaman", "Arthur Curry", E0, ["Justice League", "Atlantis"], "male", "other",

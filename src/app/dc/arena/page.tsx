@@ -118,7 +118,7 @@ export default function Home() {
   const [aff, setAff] = useState<AffFilter>("all");
   const [gender, setGender] = useState<GenderFilter>("all");
   const [species, setSpecies] = useState<SpeciesFilter>("all");
-  const [flipEnabled, setFlipEnabled] = useState(true);
+  const [flipEnabled, setFlipEnabled] = useState(false);
   const [showBelow, setShowBelow] = useState(false);
 
   const pool = useMemo(

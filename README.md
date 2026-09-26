@@ -117,7 +117,9 @@ SSG). If you outgrow Vercel DB costs, migrate data layer to Cloudflare D1 —
 - `localStorage` only, JSON.parse in try/catch, no `dangerouslySetInnerHTML`
 - Rate-limit + bot-abuse controls deferred to global-backend sprint (see KANBAN)
 - Tests: `src/lib/__tests__/elo.test.ts`; lint clean; `validate:roster` in CI
-- Branches: `main` (release) ← `develop` ← `feature/*`, PRs with checks
+- Branches: `feature/*` → `dev` → `staging` → `prod` (Vercel Production = `prod`).
+  Each env gets its own Postgres so staging/dev votes never touch prod MMR/ratings/W-L.
+  See `.env.example`. PRs with checks
 
 ## Roadmap
 
