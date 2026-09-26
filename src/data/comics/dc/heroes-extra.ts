@@ -213,6 +213,10 @@ export const dcHeroesExtra: Character[] = [
     ["Mystic insight", "Immortality"], "Showcase", "#80", 1969, "Wandering penitent of mystery.", "other"),
   h("dc-spectre", "Spectre", "Aztar", E0, ["Independent"], "male", "other",
     ["Divine vengeance"], "More Fun Comics", "#52", 1940, "Wrath of God bound to hosts.", "other"),
+  h("dc-manhattan", "Doctor Manhattan", "Jonathan Osterman", "Watchmen Universe — Earth-4", ["Independent"], "male", "other",
+    ["Matter manipulation", "Omniscience", "Flight"], "Watchmen", "#1", 1986, "Godlike survivor of the intrinsic field.", "other"),
+  h("dc-static", "Static", "Virgil Hawkins", E0, ["Teen Titans"], "male", "meta-human",
+    ["Electromagnetism", "Flight"], "Static", "#1", 1993, "Milestone teen hero of Dakota."),
 ];
 
 // Per-character portrait framing overrides (default is top-anchored cover crop).

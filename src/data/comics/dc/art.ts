@@ -188,6 +188,8 @@ export const ART: Record<string, string> = {
   "dc-morpheus": "Morpheus - Dream.webp",
   "dc-phantom-stranger": "Phantom Stranger - Judas Iscariot.webp",
   "dc-spectre": "Spectre - Aztar.webp",
+  "dc-manhattan": "Dr. Manhattan - Dr. Jonathan 'Jon' Osterman.webp",
+  "dc-static": "Static - Virgil Ovid Hawkins.webp",
   "dc-anti-monitor": "Anti-Monitor - Mobius.webp",
   "dc-barbatos": "Barbatos.webp",
   "dc-captain-boomerang": "Captain Boomerang - George Harkness.webp",
