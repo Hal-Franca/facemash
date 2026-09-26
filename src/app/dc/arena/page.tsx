@@ -209,6 +209,7 @@ export default function Home() {
           <option value="hero">Hero</option>
           <option value="anti-hero">Anti-hero</option>
           <option value="villain">Villain</option>
+          <option value="other">Other</option>
         </FilterSelect>
         <FilterSelect label="Gender" value={gender} onChange={(v) => setGender(v as GenderFilter)}>
           <option value="all">All</option>
