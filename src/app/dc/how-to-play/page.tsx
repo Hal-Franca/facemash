@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const SECTIONS: { title: string; body: string }[] = [
   {
     title: "Vote",
-    body: "Two characters appear at a time. Click your favorite — they gain Elo, the other loses it. Bigger upsets move more points (up to ~27 at K=32); beating weaker picks pays ~5.",
+    body: "Two characters appear at a time. Click your favorite — they gain Elo, the other loses it. Expected wins pay little (~5 points); upsets pay big (up to ~27) — that's what the K=32 volatility setting controls.",
   },
   {
     title: "Skip",
