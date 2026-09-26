@@ -40,7 +40,7 @@ export function TierBadge({ value }: { value: Tier }) {
   );
 }
 
-/** Uniform single-line leaderboard row: #rank + Super (Real) + badge + race + score. */
+/** Uniform leaderboard row. Single line on desktop; name+affiliation / elo-record on mobile. */
 export function RankRow({
   rank,
   c,
@@ -55,7 +55,7 @@ export function RankRow({
   losses: number;
 }) {
   return (
-    <li className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
+    <li className="flex flex-col gap-1 rounded-xl border px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-3">
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <span className="w-10 shrink-0 font-black opacity-60">#{rank}</span>
         <Link href={`/characters/${c.id}`} className="truncate font-semibold hover:underline">
@@ -64,7 +64,10 @@ export function RankRow({
         <AffiliationBadge value={c.affiliation} />
         <span className="hidden shrink-0 capitalize opacity-60 sm:inline">{c.species}</span>
       </span>
-      <span className="shrink-0 whitespace-nowrap opacity-80">
+      <span className="pl-12 text-xs opacity-80 sm:hidden">
+        {elo} · {wins}W/{losses}L
+      </span>
+      <span className="hidden shrink-0 whitespace-nowrap opacity-80 sm:inline">
         {elo} · {wins}W/{losses}L
       </span>
     </li>
