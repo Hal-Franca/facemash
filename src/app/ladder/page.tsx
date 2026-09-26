@@ -74,7 +74,7 @@ function LadderInner() {
         </FilterSelect>
       </section>
 
-      <ol className="mt-6 grid gap-2 md:grid-cols-2">
+      <ol className="mt-6 grid gap-2 lg:grid-cols-2">
         {shown.map((r) => {
           const c = byId.get(r.id)!;
           return (

@@ -286,7 +286,7 @@ export default function Home() {
       {/* Rankings: fixed top 20. Full browsing lives on /roster and /ladder. */}
       <section className="mt-10">
         <h2 className="text-xl font-bold">Top 20 ({ranked.length})</h2>
-        <ol className="mt-3 grid gap-2 md:grid-cols-2">
+        <ol className="mt-3 grid gap-2 lg:grid-cols-2">
           {ranked.slice(0, 20).map((r) => {
             const c = byId.get(r.id)!;
             return (
