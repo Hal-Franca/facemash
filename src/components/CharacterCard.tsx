@@ -55,9 +55,9 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
   );
 }
 
-export function StatCard({ c, elo }: { c: Character; elo?: number }) {
+export function StatCard({ c, elo, className = "" }: { c: Character; elo?: number; className?: string }) {
   return (
-    <div className="mt-3 w-full flex-1 rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80">
+    <div className={`mt-3 w-full flex-1 rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80 ${className}`}>
       <StatHeading c={c} />
       <StatDetails c={c} elo={elo} />
     </div>
