@@ -1,8 +1,10 @@
 /**
  * One-shot + repeatable image importer.
  * Source:  raw downloads (any size, jpg/png) e.g. C:/Users/Hal/Downloads/img
- * Dest:    public/images/comics/dc/<original-name>.webp (600x800 cover, q80)
- * Wiring character `image.url` happens separately in src/data (by filename match).
+ * Dest:    public/images/comics/dc/<original-name>.webp (fit inside 600x800, q80)
+ *           NO CROPPING here — files keep the full image; framing is CSS-only
+ *           (`object-cover` in CharacterPortrait). Wiring character `image.url`
+ *           happens separately in src/data (by filename match).
  *
  * Usage: node scripts/import-images.mjs "C:/Users/Hal/Downloads/img"
  */
@@ -29,7 +31,7 @@ for (const f of files) {
   const base = f.replace(/\.(jpe?g|png|webp)$/i, "");
   try {
     await sharp(path.join(SRC, f))
-      .resize(600, 800, { fit: "cover", position: "attention" })
+      .resize(600, 800, { fit: "inside", withoutEnlargement: false })
       .webp({ quality: 80 })
       .toFile(path.join(DEST, `${base}.webp`));
     ok++;

@@ -54,7 +54,7 @@ This keeps the repo legal and images uniform (600×800, 3:4 `object-cover`).
 Raw art lives outside the repo; standardized copies are imported with:
 
 ```bash
-node scripts/import-images.mjs "C:/path/to/raw/img"  # -> public/images/comics/dc/*.webp (600x800)
+node scripts/import-images.mjs "C:/path/to/raw/img"  # -> public/images/comics/dc/*.webp (fit inside 600x800, no crop; framing is CSS-only)
 ```
 
 250 portraits are already imported there. Wiring `image.url` per character is next.
