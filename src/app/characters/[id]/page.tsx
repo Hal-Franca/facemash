@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { catalog, getCharacter } from "@/data";
-import { CharacterPortrait, StatCard } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard } from "@/components/CharacterCard";
 
 export function generateStaticParams() {
   return catalog.map((c) => ({ id: c.id }));
@@ -22,6 +22,10 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
       <Link href="/" className="text-sm underline opacity-70">← Back to arena</Link>
       <h1 className="mt-2 text-3xl font-black">{c.superName}</h1>
       <p className="opacity-70">{c.name} · {c.universe.toUpperCase()} · {c.category}</p>
+      <p className="mt-2 flex items-center gap-2">
+        <AffiliationBadge value={c.affiliation} />
+        <span className="text-sm capitalize opacity-60">{c.species}</span>
+      </p>
       {/* Stacked on mobile (unchanged); side-by-side on desktop, stat box matches image height */}
       <div className="mt-4 grid gap-6 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div className="mx-auto w-full max-w-sm">

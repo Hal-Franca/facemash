@@ -99,6 +99,7 @@ function VoteCard({
       </p>
       <p className="mt-3 flex items-center justify-center gap-2">
         <AffiliationBadge value={c.affiliation} />
+        <span className="text-sm capitalize opacity-60">{c.species}</span>
         <span
           role="button"
           tabIndex={0}
