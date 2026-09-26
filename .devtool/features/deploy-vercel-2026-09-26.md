@@ -13,4 +13,4 @@ order: "a0"
 
 # Deploy to Vercel
 
-Deploy from `main`, verify mobile layout and light mode on the live URL. App is Vercel-ready (App Router + SSG + security headers, no custom server).
+Push `dev`/`staging`/`prod` to GitHub, import repo in Vercel, set Production Branch to `prod`, deploy with defaults (no env vars — app boots in local mode). Then verify mobile layout + light mode on the live URL.
