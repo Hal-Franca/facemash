@@ -30,21 +30,42 @@ function initials(c: Character) {
 /** Fixed 3:4 aspect, responsive, consistent size. Uses remote art when licensed, else styled placeholder. */
 export function CharacterPortrait({ c, priority = false }: { c: Character; priority?: boolean }) {
   if (c.image.url) {
-    const contain = c.image.fit === "contain";
+    if (c.image.fit === "contain") {
+      // Wide art: blurred-fill backdrop + full image on top (no dead bands, no crop).
+      return (
+        <div
+          role="img"
+          aria-label={c.image.alt}
+          className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-zinc-900"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={encodeURI(c.image.url)}
+            alt=""
+            aria-hidden="true"
+            loading={priority ? "eager" : "lazy"}
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl brightness-[0.6]"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={encodeURI(c.image.url)}
+            alt={c.image.alt}
+            loading={priority ? "eager" : "lazy"}
+            className="relative h-full w-full object-contain"
+          />
+        </div>
+      );
+    }
+    // Plain <img> on purpose: art dimensions vary by source; CSS enforces uniform 3:4 crop.
+    // encodeURI: files keep their original "Super - Name" spelling (spaces, quotes).
+    // eslint-disable-next-line @next/next/no-img-element
     return (
-      // Plain <img> on purpose: art dimensions vary by source; CSS enforces uniform 3:4 crop.
-      // encodeURI: files keep their original "Super - Name" spelling (spaces, quotes).
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={encodeURI(c.image.url)}
         alt={c.image.alt}
         loading={priority ? "eager" : "lazy"}
-        style={c.image.focus && !contain ? { objectPosition: c.image.focus } : undefined}
-        className={
-          contain
-            ? "aspect-[3/4] w-full rounded-2xl bg-zinc-200 object-contain dark:bg-zinc-800"
-            : "aspect-[3/4] w-full rounded-2xl object-cover object-top"
-        }
+        style={c.image.focus ? { objectPosition: c.image.focus } : undefined}
+        className="aspect-[3/4] w-full rounded-2xl object-cover object-top"
       />
     );
   }
