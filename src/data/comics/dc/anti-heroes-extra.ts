@@ -47,4 +47,8 @@ export const dcAntiHeroesExtra: Character[] = [
     ["Shark strength", "Regeneration"], "Superboy", "#0", 1994, "Demigod shark prince turned Squad muscle."),
   a("dc-vigilante", "Vigilante", "Adrian Chase", E0, ["Independent"], "male", "human",
     ["Marksmanship", "Motorcycle"], "New Teen Titans Annual", "#2", 1983, "Judge turned lethal vigilante."),
+  a("dc-waller", "Amanda Waller", "Amanda Waller", E0, ["Suicide Squad", "Checkmate"], "female", "human",
+    ["Command", "Espionage", "Ruthlessness"], "Legends", "#1", 1986, "The Wall running Task Force X."),
+  a("dc-flashpoint-batman", "Flashpoint Batman", "Thomas Wayne", "DC Universe — Flashpoint", ["Bat-Family"], "male", "human",
+    ["Guns", "Brutality"], "Flashpoint", "#1", 2011, "Gun-toting father Batman of Flashpoint."),
 ];
