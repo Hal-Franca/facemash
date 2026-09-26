@@ -136,4 +136,10 @@ export const dcVillainsExtra: Character[] = [
     ["Kryptonian powers", "Reality punches"], "DC Comics Presents", "#87", 1985, "Evil Prime-Earth Superboy."),
   v("dc-thinker", "Thinker", "Clifford DeVoe", E0, ["Injustice Society"], "male", "human",
     ["Thinking cap", "Telepathy"], "All-Flash", "#12", 1943, "Scheming mind-capped mastermind."),
+  v("dc-cyborg-superman-zorel", "Cyborg Superman", "Zor-El", E0, ["Brainiac"], "male", "other",
+    ["Technopathy", "Kryptonian powers"], "Supergirl", "#5", 2012, "Supergirl's father rebuilt as Brainiac's scout."),
 ];
+
+// Per-character portrait framing overrides (default is top-anchored cover crop).
+// Eclipso's art has dead white space on top and his title logo at the bottom.
+dcVillainsExtra.find((c) => c.id === "dc-eclipso")!.image.focus = "bottom";
