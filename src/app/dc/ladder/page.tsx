@@ -21,11 +21,20 @@ function LadderInner() {
   const [gender, setGender] = useState<GenderFilter>(initial.gender);
   const [species, setSpecies] = useState<SpeciesFilter>(initial.species);
   const [sort, setSort] = useState<Sort>("rank");
+  const [query, setQuery] = useState("");
 
   const { ranked, byId } = useBoard(aff, gender, species);
 
   const shown = useMemo(() => {
-    const rows = [...ranked];
+    const q = query.trim().toLowerCase();
+    const rows = q
+      ? ranked.filter((r) => {
+          const c = byId.get(r.id)!;
+          return (
+            c.superName.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)
+          );
+        })
+      : [...ranked];
     if (sort !== "rank") {
       rows.sort((a, b) => {
         const an = byId.get(a.id)!.superName;
@@ -34,7 +43,7 @@ function LadderInner() {
       });
     }
     return rows;
-  }, [ranked, byId, sort]);
+  }, [ranked, byId, sort, query]);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6">
@@ -72,6 +81,26 @@ function LadderInner() {
           <option value="alien">Alien</option>
           <option value="other">Other</option>
         </FilterSelect>
+        <label className="flex flex-col gap-1 text-sm sm:col-span-3">
+          Search
+          <span className="relative block">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Super name or real name…"
+              className="w-full rounded-lg border border-zinc-300 bg-white p-2 pr-10 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+              >
+                ✕
+              </button>
+            )}
+          </span>
+        </label>
       </section>
 
       <ol className="mt-6 grid gap-2 lg:grid-cols-2">
