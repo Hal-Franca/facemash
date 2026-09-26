@@ -8,6 +8,7 @@ const NAV = [
   { href: "/dc/arena", label: "Arena" },
   { href: "/dc/roster", label: "Roster" },
   { href: "/dc/ladder", label: "Ladder" },
+  { href: "/dc/how-to-play", label: "How to Play" },
 ];
 
 /** Global top bar: universe logo, title, hamburger drawer (Arena/Roster/Ladder). */

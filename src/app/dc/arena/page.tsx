@@ -196,6 +196,9 @@ export default function Home() {
           <button onClick={toggle} className="rounded-full border px-4 py-2 text-sm" aria-label="Toggle theme">
             {!mounted || theme === "dark" ? "☀ Light" : "🌙 Dark"}
           </button>
+          <Link href="/dc/how-to-play" className="rounded-full border px-4 py-2 text-sm">
+            ❓ How to play
+          </Link>
         </div>
       </div>
 
