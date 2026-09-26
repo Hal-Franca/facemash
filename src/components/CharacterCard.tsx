@@ -38,6 +38,7 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
         src={encodeURI(c.image.url)}
         alt={c.image.alt}
         loading={priority ? "eager" : "lazy"}
+        style={c.image.focus ? { objectPosition: c.image.focus } : undefined}
         className="aspect-[3/4] w-full rounded-2xl object-cover object-top"
       />
     );

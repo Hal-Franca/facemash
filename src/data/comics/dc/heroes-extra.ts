@@ -189,3 +189,7 @@ export const dcHeroesExtra: Character[] = [
   h("dc-dove", "Dove", "Dawn Granger", E0, ["Hawk and Dove"], "female", "human",
     ["Danger sense", "Flight", "Calm aura"], "Hawk and Dove", "#1", 1988, "Avatar of peace."),
 ];
+
+// Per-character portrait framing overrides (CSS object-position; default is top).
+// Lucius Fox's art is a tight face close-up: center it so the frame doesn't clip his head.
+dcHeroesExtra.find((c) => c.id === "dc-lucius")!.image.focus = "center";

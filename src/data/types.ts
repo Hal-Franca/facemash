@@ -16,6 +16,8 @@ export interface CharacterImage {
   url: string | null;
   alt: string;
   credit?: string;
+  /** CSS object-position override for the portrait frame (default top-anchored). */
+  focus?: string;
 }
 
 export interface Character {
