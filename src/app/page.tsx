@@ -21,6 +21,27 @@ function useMounted() {
   );
 }
 
+/** Floating back-to-top, appears after scrolling past the arena. No setState-in-effect. */
+function BackToTop() {
+  const show = useSyncExternalStore(
+    (cb) => {
+      window.addEventListener("scroll", cb, { passive: true });
+      return () => window.removeEventListener("scroll", cb);
+    },
+    () => window.scrollY > 600,
+    () => false
+  );
+  if (!show) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Back to top"
+      className="fixed bottom-6 right-6 z-50 rounded-full border border-zinc-300 bg-white/90 px-4 py-2 text-sm shadow-lg backdrop-blur hover:bg-white dark:border-zinc-700 dark:bg-zinc-900/90 dark:hover:bg-zinc-900"
+    >
+      ↑ Top
+    </button>
+  );
+}
 const SELECT_CLS =
   "w-full appearance-none rounded-lg border border-zinc-300 bg-white p-2 pr-10 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
 
@@ -132,7 +153,7 @@ export default function Home() {
   const [species, setSpecies] = useState<SpeciesFilter>("all");
   const [flipEnabled, setFlipEnabled] = useState(true);
   const [showBelow, setShowBelow] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(20);
 
   const pool = useMemo(
     () =>
@@ -205,19 +226,19 @@ export default function Home() {
 
       {/* Filters */}
       <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
-        <FilterSelect label="Affiliation" value={aff} onChange={(v) => { setAff(v as AffFilter); setVisibleCount(10); }}>
+        <FilterSelect label="Affiliation" value={aff} onChange={(v) => { setAff(v as AffFilter); setVisibleCount(20); }}>
           <option value="all">All</option>
           <option value="hero">Hero</option>
           <option value="anti-hero">Anti-hero</option>
           <option value="villain">Villain</option>
         </FilterSelect>
-        <FilterSelect label="Gender" value={gender} onChange={(v) => { setGender(v as GenderFilter); setVisibleCount(10); }}>
+        <FilterSelect label="Gender" value={gender} onChange={(v) => { setGender(v as GenderFilter); setVisibleCount(20); }}>
           <option value="all">All</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
           <option value="other">Other</option>
         </FilterSelect>
-        <FilterSelect label="Species" value={species} onChange={(v) => { setSpecies(v as SpeciesFilter); setVisibleCount(10); }}>
+        <FilterSelect label="Species" value={species} onChange={(v) => { setSpecies(v as SpeciesFilter); setVisibleCount(20); }}>
           <option value="all">All</option>
           <option value="human">Human</option>
           <option value="meta-human">Meta-human</option>
@@ -291,21 +312,31 @@ export default function Home() {
             );
           })}
         </ol>
-        {visibleCount < ranked.length ? (
+        {ranked.length > 20 && (
           <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
-            <button onClick={() => setVisibleCount((v) => v + 20)} className="rounded-full border px-4 py-2">
-              Show 20 more ({ranked.length - visibleCount} left)
-            </button>
-            <button onClick={() => setVisibleCount(ranked.length)} className="rounded-full border px-4 py-2">
-              Show all ({ranked.length})
-            </button>
+            {visibleCount < ranked.length && (
+              <button onClick={() => setVisibleCount((v) => Math.min(v + 20, ranked.length))} className="rounded-full border px-4 py-2">
+                Show more ({ranked.length - visibleCount} left)
+              </button>
+            )}
+            {visibleCount > 20 && visibleCount < ranked.length && (
+              <button onClick={() => setVisibleCount((v) => Math.max(20, v - 20))} className="rounded-full border px-4 py-2">
+                Show less
+              </button>
+            )}
+            {visibleCount < ranked.length ? (
+              <button onClick={() => setVisibleCount(ranked.length)} className="rounded-full border px-4 py-2">
+                Show all ({ranked.length})
+              </button>
+            ) : (
+              <button onClick={() => setVisibleCount(20)} className="rounded-full border px-4 py-2">
+                Show less (back to 20)
+              </button>
+            )}
           </div>
-        ) : ranked.length > 10 ? (
-          <div className="mt-4 flex justify-center text-sm">
-            <button onClick={() => setVisibleCount(10)} className="rounded-full border px-4 py-2">Show less</button>
-          </div>
-        ) : null}
+        )}
       </section>
+      <BackToTop />
     </main>
   );
 }
