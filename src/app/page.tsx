@@ -6,7 +6,7 @@ import type { Affiliation, Character, Gender, Rating, Species } from "@/data/typ
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading, TierBadge } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
 import { buildBoard } from "@/lib/ranking";
 
 type AffFilter = Affiliation | "all";
@@ -329,16 +329,15 @@ export default function Home() {
             const c = byId.get(r.id)!;
             return (
               <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
-                <span className="flex items-center gap-2">
-                  <span className="w-10 font-black opacity-60">#{r.rank}</span>
-                  <Link href={`/characters/${c.id}`} className="font-semibold hover:underline">
+                <span className="flex min-w-0 flex-1 items-center gap-2">
+                  <span className="w-10 shrink-0 font-black opacity-60">#{r.rank}</span>
+                  <Link href={`/characters/${c.id}`} className="truncate font-semibold hover:underline">
                     {c.superName} <span className="font-normal opacity-60">({c.name})</span>
                   </Link>
                   <AffiliationBadge value={c.affiliation} />
-                  <span className="opacity-60 capitalize">{c.species}</span>
-                  <TierBadge value={r.tier} />
+                  <span className="hidden shrink-0 capitalize opacity-60 sm:inline">{c.species}</span>
                 </span>
-                <span className="opacity-80">{r.elo} · {r.wins}W/{r.battles - r.wins}L</span>
+                <span className="shrink-0 whitespace-nowrap opacity-80">{r.elo} · {r.wins}W/{r.battles - r.wins}L</span>
               </li>
             );
           })}
