@@ -23,13 +23,27 @@ configured — the header shows "shared global board" vs "stored locally".
 Without `POSTGRES_URL`, everything stays in `localStorage` (nothing breaks).
 Deploys on **Vercel** (App Router + SSG, security headers in `next.config.ts`).
 
-## Global board setup (Vercel Postgres, free tier)
+## Global board setup (Neon Postgres via Vercel, free tier)
 
-1. Vercel dashboard → Storage → Create Database → Postgres → connect this project.
-   This injects `POSTGRES_URL` (preview + production envs).
-2. Open the database Query tab and run `scripts/schema.sql` once.
-3. Redeploy. Votes now POST to `/api/vote` (server-side Elo, validated
-   character ids) and boards load from `/api/ratings`.
+1. Vercel dashboard → Storage → Browse → **Neon / Serverless Postgres** → Create
+   (`facemash-db`, region matching deployment — `iad1`/DC East, Auth OFF, free plan).
+2. On the Install Integration screen: set **Custom Prefix to `POSTGRES`**
+   (default `STORAGE` injects `STORAGE_URL`, which this app ignores — it reads
+   `POSTGRES_URL`). Environments: Production + Preview checked, Development
+   unchecked (local dev stays on `localStorage`). Leave database-branch boxes
+   unchecked (one shared DB). Keep Sensitive on → Connect.
+3. Neon dashboard → SQL Editor → run `scripts/schema.sql` once.
+4. Vercel → Redeploy so serverless functions pick up the env var.
+5. Reload the site: subtitle flips to *"shared global board"*. Test across two
+   browser profiles (normal + incognito): votes in one appear in the other.
+
+## Deploy flow (live)
+
+- Repo: `Hal-Franca/facemash`, default branch **`prod`**.
+- Vercel project imports the repo, Production Branch = `prod`, live at
+  `facemash-arena.vercel.app` (redirect from the original `-psi` domain).
+- No env vars needed for local-mode deploys; `POSTGRES_URL` arrives via the
+  Neon integration. Daily flow stays `feature/*` → `dev` → `staging` → `prod`.
 
 Local dev against a DB: `npm i -g vercel; vercel env pull` (or set `POSTGRES_URL`
 manually), then `npm run dev`.

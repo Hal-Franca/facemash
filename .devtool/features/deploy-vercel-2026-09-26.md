@@ -1,6 +1,6 @@
 ---
 id: "deploy-vercel-2026-09-26"
-status: "in-progress"
+status: "done"
 priority: "high"
 assignee: "hal-franca"
 dueDate: null
