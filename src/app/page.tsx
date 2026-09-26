@@ -6,7 +6,8 @@ import type { Affiliation, Character, Gender, Rating, Species } from "@/data/typ
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading, TierBadge } from "@/components/CharacterCard";
+import { buildBoard } from "@/lib/ranking";
 
 type AffFilter = Affiliation | "all";
 type GenderFilter = Gender | "all";
@@ -217,14 +218,23 @@ export default function Home() {
 
   // Ratings only render after mount (localStorage differs per browser).
   const rOf = (id: string): Rating | undefined => (mounted ? ratings[id] : undefined);
+  // Board order: Elo -> wins -> battles -> A-Z, with letter-suffixed
+  // competition ranks and SC2-style tiers (Grandmaster = top-20 rows).
   const ranked = useMemo(
     () =>
-      [...pool].sort(
-        (a, b) => (rOf(b.id)?.elo ?? BASE_ELO) - (rOf(a.id)?.elo ?? BASE_ELO)
+      buildBoard(
+        pool.map((c) => ({
+          id: c.id,
+          name: c.superName,
+          elo: rOf(c.id)?.elo ?? BASE_ELO,
+          wins: rOf(c.id)?.wins ?? 0,
+          battles: (rOf(c.id)?.wins ?? 0) + (rOf(c.id)?.losses ?? 0),
+        }))
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pool, ratings, mounted]
   );
+  const byId = useMemo(() => new Map(pool.map((c) => [c.id, c])), [pool]);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6">
@@ -315,19 +325,20 @@ export default function Home() {
         <h2 className="text-xl font-bold">Rankings ({ranked.length})</h2>
         <p className="mt-1 text-sm opacity-60">Showing {Math.min(visibleCount, ranked.length)} of {ranked.length}</p>
         <ol className="mt-3 grid gap-2 md:grid-cols-2">
-          {ranked.slice(0, visibleCount).map((c, i) => {
-            const r = rOf(c.id);
+          {ranked.slice(0, visibleCount).map((r) => {
+            const c = byId.get(r.id)!;
             return (
               <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-7 font-black opacity-60">#{i + 1}</span>
+                  <span className="w-10 font-black opacity-60">#{r.rank}</span>
                   <Link href={`/characters/${c.id}`} className="font-semibold hover:underline">
                     {c.superName}
                   </Link>
                   <AffiliationBadge value={c.affiliation} />
                   <span className="opacity-60 capitalize">{c.species}</span>
+                  <TierBadge value={r.tier} />
                 </span>
-                <span className="opacity-80">{r?.elo ?? BASE_ELO} · {r?.wins ?? 0}W/{r?.losses ?? 0}L</span>
+                <span className="opacity-80">{r.elo} · {r.wins}W/{r.battles - r.wins}L</span>
               </li>
             );
           })}

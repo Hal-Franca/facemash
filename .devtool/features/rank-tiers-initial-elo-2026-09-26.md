@@ -11,6 +11,8 @@ labels: ["backend", "frontend"]
 order: "a9"
 ---
 
-# Rank tiers on top of Elo + initial Elo calibration
+# Rank tiers + ranking display rules
 
-Visible tiers (bronze, silver, gold, platinum, diamond, ...) derived from Elo bands, shown as badges in arena/rankings/profiles. Research optimal initial Elo + K-factor so new characters place sensibly and early votes don't swing wildly. Tiers must survive the SQL migration (computed server-side).
+Base 1400 (FIDE floor). Order: Elo → wins → total battles → A–Z. Competition ranks with letter suffixes (`#1, #2A, #2B, #4A, #4B, #6`).
+
+Visible tiers bronze/silver/gold/platinum/diamond by Elo band (Diamond 1800+, Platinum 1600+, Gold 1400+, Silver 1200+ — tunable in `src/lib/ranking.ts`). Grandmaster = first 20 display rows of the filtered board meeting a 5-battle gate; boundary ties never split. All rules recompute per filter and port to SQL (ORDER BY + window functions).

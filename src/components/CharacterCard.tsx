@@ -1,4 +1,5 @@
 import type { Affiliation, Character } from "@/data/types";
+import type { Tier } from "@/lib/ranking";
 
 const AFFILIATION_STYLES: Record<Affiliation, string> = {
   hero: "bg-sky-500/15 text-sky-700 ring-sky-500/40 dark:text-sky-300",
@@ -12,6 +13,26 @@ export function AffiliationBadge({ value }: { value: Affiliation }) {
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ring-1 ring-inset ${AFFILIATION_STYLES[value]}`}
+    >
+      {value}
+    </span>
+  );
+}
+
+const TIER_STYLES: Record<Tier, string> = {
+  Bronze: "bg-amber-800/15 text-amber-800 ring-amber-800/40 dark:text-amber-500",
+  Silver: "bg-zinc-400/15 text-zinc-600 ring-zinc-400/40 dark:text-zinc-300",
+  Gold: "bg-yellow-500/15 text-yellow-700 ring-yellow-500/40 dark:text-yellow-300",
+  Platinum: "bg-cyan-500/15 text-cyan-700 ring-cyan-500/40 dark:text-cyan-300",
+  Diamond: "bg-violet-500/15 text-violet-700 ring-violet-500/40 dark:text-violet-300",
+  Grandmaster: "bg-fuchsia-500/15 text-fuchsia-700 ring-fuchsia-500/40 dark:text-fuchsia-300",
+};
+
+/** Elo-tier badge (SC2-style ladder). */
+export function TierBadge({ value }: { value: Tier }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ring-inset ${TIER_STYLES[value]}`}
     >
       {value}
     </span>
