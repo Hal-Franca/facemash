@@ -1,45 +1,37 @@
 # Kanban — Facemash (Scrum / Agile)
 
-Sprint 0 (done): scaffold Next.js+TS, 88-character DC roster (30 heroes + 30 villains +
-28 anti-heroes; Ra's+Talia deduped as villains), arena + Elo + rankings +
-filters + skip + stat card (universe/teams/bio) + dark/light + responsive,
-README, unit tests, lint, roster validation. Vercel-ready (SSG + headers).
+Cards live in the **Kanban Markdown board**, not in this file:
+`.devtool/features/` (22 cards, mirrored from the plan below).
 
-## Done
+## Running the board (VS Code + Kanban Markdown by LachyFS)
 
-- [x] Scaffold `C:\GitHub\facemash` (Next.js 16, TS, Tailwind, ESLint)
-- [x] Data model `Category > Universe > Affiliation` (`src/data/*`)
-- [x] Full catalog: 226 characters (110 heroes + 78 villains + 38 anti-heroes)
-  via `heroes-extra`, `villains-extra`, `anti-heroes-extra`; every entry has
-  portrait wired (`art.ts`), bio, powers, first appearance, teams, universe
-- [x] Elo engine + tests (`src/lib/elo.ts`, `__tests__/elo.test.ts`)
-- [x] Arena vote + skip both/one-side + rankings + filters + char pages
-- [x] Dark default + light toggle + responsive 3:4 portraits
-- [x] README + `validate:roster` + lint/test/build green
+1. Install — search `Kanban Markdown` in the Extensions view.
+2. Open — command palette → `Open Kanban Board` (or the sidebar icon).
+3. Columns — Backlog, To Do, In Progress, Review, Done (defaults, no config needed
+   since cards sit in the default `.devtool/features/` directory).
+4. Move work — drag cards between columns, or press `N` for a new card. Moving a
+   card edits its markdown file (and vice versa); everything is committed to git.
+5. Card format — one `.md` per feature with YAML frontmatter
+   (`id, status, priority, assignee, dueDate, created, modified, completedAt, labels, order`),
+   finished cards under `done/`. Keep the exact serialization (double-quoted strings,
+   bare `null`, inline label arrays) so the extension keeps parsing them.
 
-## Doing
+## Board upkeep
 
-- [ ] Deploy to Vercel from `main`, verify mobile + light mode
-- [ ] Replace placeholder portraits with licensed 600×800 webp (see README)
+- In Progress holds at most 2 cards (solo WIP limit).
+- A card moves to Done only when lint + test + `validate:roster` + build pass,
+  responsive + both themes checked.
+- Priorities: backend + deploy = high; content/data expansions = medium;
+  i18n/PWA/Glicko = low (see card badges).
+- Sprint rhythm: weekly; plan from To Do, review Done, re-file leftovers to Backlog.
 
-## To Do (Sprint 1–2)
+## Current snapshot (see board for live state)
 
-- [ ] Global votes backend (Vercel KV or Cloudflare D1) + rate limiting
-- [ ] Admin CRUD for characters (protected route)
-- [ ] Anti-bot: fingerprint + cooldown, audit log
-- [ ] E2E: Playwright vote → ranking persists on reload
-- [ ] `develop` branch + CI (lint/test/build/validate) + branch protection
-
-## Backlog
-
-- [ ] PT-BR i18n (EN-only for now)
-- [ ] Marvel universe (`src/data/comics/marvel/*`)
-- [ ] Anime titles/characters (`src/data/anime/*`)
-- [ ] PWA / share-card / SEO per character
-- [ ] Glicko-2 or decay, seasons leaderboard
-
-## Scrum cadence (solo-friendly)
-
-Weekly sprint: plan from To Do → Doing (WIP ≤ 2) → Done with green checks.
-Definition of done: lint + test + validate:roster + build pass, responsive +
-both themes checked.
+- Shipped: scaffold, data model, 226-character catalog with wired portraits,
+  Elo engine + tests, arena + rankings + filters + pagination, dark/light +
+  responsive, flip cards + badges, hydration fix, README/validation/green builds,
+  footer + image disclaimer.
+- In progress: Vercel deploy, licensed portrait upgrades.
+- Next (To Do): global votes backend, admin CRUD, anti-bot, Playwright E2E,
+  `develop` + CI + branch protection.
+- Backlog: PT-BR i18n, Marvel universe, Anime, PWA/share/SEO, Glicko-2 + seasons.
