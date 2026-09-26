@@ -9,8 +9,9 @@ README, unit tests, lint, roster validation. Vercel-ready (SSG + headers).
 
 - [x] Scaffold `C:\GitHub\facemash` (Next.js 16, TS, Tailwind, ESLint)
 - [x] Data model `Category > Universe > Affiliation` (`src/data/*`)
-- [x] Roster 30 heroes + 30 villains + 28 anti-heroes with universe/teams in bio
-- [x] Display names as Super (Name): The Flash (Barry Allen), Green Lantern (Hal Jordan), Robin (Damian Wayne)
+- [x] Full catalog: 226 characters (110 heroes + 78 villains + 38 anti-heroes)
+  via `heroes-extra`, `villains-extra`, `anti-heroes-extra`; every entry has
+  portrait wired (`art.ts`), bio, powers, first appearance, teams, universe
 - [x] Elo engine + tests (`src/lib/elo.ts`, `__tests__/elo.test.ts`)
 - [x] Arena vote + skip both/one-side + rankings + filters + char pages
 - [x] Dark default + light toggle + responsive 3:4 portraits

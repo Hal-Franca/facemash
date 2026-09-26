@@ -1,4 +1,5 @@
 import type { Character } from "../../types";
+import { artFor } from "./art";
 
 // NOTE: Ra's al Ghul + Talia al Ghul appear in your villains table too —
 // they are kept ONCE as villains (dc-ras-al-ghul, dc-talia-al-ghul) to avoid
@@ -34,7 +35,7 @@ function antiHero(
     powers,
     firstAppearance: { comic, issue, year },
     bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
-    image: { url: null, alt: `${superName} portrait placeholder` },
+    image: artFor(id, superName),
   };
 }
 

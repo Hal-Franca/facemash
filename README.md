@@ -57,7 +57,9 @@ Raw art lives outside the repo; standardized copies are imported with:
 node scripts/import-images.mjs "C:/path/to/raw/img"  # -> public/images/comics/dc/*.webp (fit inside 600x800, no crop; framing is CSS-only)
 ```
 
-250 portraits are already imported there. Wiring `image.url` per character is next.
+253 portraits are already imported there. All 226 catalog characters have art
+wired via `src/data/comics/dc/art.ts` (id → file). Fan-curated data: first
+appearances/powers verified for major characters, best-effort for obscure ones.
 
 To add real art later (per character):
 

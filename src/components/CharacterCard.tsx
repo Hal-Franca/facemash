@@ -32,9 +32,10 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
   if (c.image.url) {
     return (
       // Plain <img> on purpose: art dimensions vary by source; CSS enforces uniform 3:4 crop.
+      // encodeURI: files keep their original "Super - Name" spelling (spaces, quotes).
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={c.image.url}
+        src={encodeURI(c.image.url)}
         alt={c.image.alt}
         loading={priority ? "eager" : "lazy"}
         className="aspect-[3/4] w-full rounded-2xl object-cover"

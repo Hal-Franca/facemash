@@ -1,4 +1,5 @@
 import type { Character } from "../../types";
+import { artFor } from "./art";
 
 const E0 = "DC Universe — Earth-0";
 
@@ -36,7 +37,7 @@ function hero(
     powers,
     firstAppearance: { comic, issue, year },
     bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
-    image: { url: null, alt: `${superName} portrait placeholder` },
+    image: artFor(id, superName),
   };
 }
 
