@@ -34,7 +34,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Your data",
-    body: "Every vote saves to the shared global board, so rankings reflect all voters on all devices. A local copy keeps the app instant and working offline.",
+    body: "Every vote saves to the shared global board, so rankings reflect all voters on all devices.",
   },
 ];
 
