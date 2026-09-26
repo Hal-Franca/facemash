@@ -45,18 +45,11 @@ function RosterInner() {
           <h1 className="text-2xl font-black tracking-tight">Roster ({shown.length})</h1>
           <p className="opacity-70">Every character, with rank. Click a card for the full profile.</p>
         </div>
-        <label className="flex flex-col gap-1 text-sm">
-          Sort
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
-            className="rounded-lg border border-zinc-300 bg-white p-2 pr-10 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]"
-          >
-            <option value="rank">Rank</option>
-            <option value="az">A–Z</option>
-            <option value="za">Z–A</option>
-          </select>
-        </label>
+        <FilterSelect label="Sort" value={sort} onChange={(v) => setSort(v as Sort)}>
+          <option value="rank">Rank</option>
+          <option value="az">A–Z</option>
+          <option value="za">Z–A</option>
+        </FilterSelect>
       </div>
 
       <section className="mt-4 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
