@@ -192,4 +192,4 @@ export const dcHeroesExtra: Character[] = [
 
 // Per-character portrait framing overrides (default is top-anchored cover crop).
 // Lucius Fox's art is a wide close-up: anchor right so the face stays in frame.
-dcHeroesExtra.find((c) => c.id === "dc-lucius")!.image.focus = "85% 50%";
+dcHeroesExtra.find((c) => c.id === "dc-lucius")!.image.focus = "75% 50%";
