@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Affiliation, Character } from "@/data/types";
 import type { Tier } from "@/lib/ranking";
 
@@ -28,7 +29,7 @@ const TIER_STYLES: Record<Tier, string> = {
   Grandmaster: "bg-fuchsia-500/15 text-fuchsia-700 ring-fuchsia-500/40 dark:text-fuchsia-300",
 };
 
-/** Elo-tier badge (SC2-style ladder). */
+/** SC2-style ladder tier badge. Kept for roster/profile use (rankings rows stay clean). */
 export function TierBadge({ value }: { value: Tier }) {
   return (
     <span
@@ -36,6 +37,37 @@ export function TierBadge({ value }: { value: Tier }) {
     >
       {value}
     </span>
+  );
+}
+
+/** Uniform single-line leaderboard row: #rank + Super (Real) + badge + race + score. */
+export function RankRow({
+  rank,
+  c,
+  elo,
+  wins,
+  losses,
+}: {
+  rank: string;
+  c: Character;
+  elo: number;
+  wins: number;
+  losses: number;
+}) {
+  return (
+    <li className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
+      <span className="flex min-w-0 flex-1 items-center gap-2">
+        <span className="w-10 shrink-0 font-black opacity-60">#{rank}</span>
+        <Link href={`/characters/${c.id}`} className="truncate font-semibold hover:underline">
+          {c.superName} <span className="font-normal opacity-60">({c.name})</span>
+        </Link>
+        <AffiliationBadge value={c.affiliation} />
+        <span className="hidden shrink-0 capitalize opacity-60 sm:inline">{c.species}</span>
+      </span>
+      <span className="shrink-0 whitespace-nowrap opacity-80">
+        {elo} · {wins}W/{losses}L
+      </span>
+    </li>
   );
 }
 

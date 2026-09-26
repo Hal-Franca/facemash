@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { catalog, getCharacter } from "@/data";
 import { AffiliationBadge, CharacterPortrait, StatCard } from "@/components/CharacterCard";
+import { SiteHeader } from "@/components/SiteHeader";
 
 export function generateStaticParams() {
   return catalog.map((c) => ({ id: c.id }));
@@ -31,7 +32,8 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
   }
   return (
     <main className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6">
-      <Link href="/" className="text-sm underline opacity-70">← Back to arena</Link>
+      <SiteHeader />
+      <Link href="/" className="mt-3 inline-block text-sm underline opacity-70">← Back to arena</Link>
       <h1 className="mt-2 text-3xl font-black">{c.superName}</h1>
       <p className="opacity-70">{c.name} · {c.universe.toUpperCase()} · {c.category}</p>
       <p className="mt-2 flex items-center gap-2">

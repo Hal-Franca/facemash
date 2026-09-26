@@ -3,6 +3,21 @@
 Vote and rank DC heroes, villains and anti-heroes, Facemash-style. English-only MVP.
 Portuguese i18n is backlog. Stack: **TypeScript + Next.js (App Router) + Tailwind v4**.
 
+## Why this exists
+
+This started as an unfinished school project (SENAC): a Facemash-style app where
+you vote between two faces — but for DC heroes, villains and anti-heroes instead
+of people. I'm rebuilding it from zero for two reasons: to properly learn
+AI-assisted development (building with coding agents), and to turn it into a
+portfolio piece.
+
+**What it answers:** *is Batman truly the best?* Opinions are cheap — randomized
+1v1 voting with chess-style Elo produces a crowd verdict instead. Filters go
+further: best of the Bat-Family? Of the Lanterns? Of villains?
+
+**Why DC first:** 250 DC characters are the template. Once the design, ranking
+engine and data model are proven here, Marvel and anime plug into the same system.
+
 Live demo goal: free, always-on, no manual wake-ups. Votes are local-first
 (`localStorage`); global backend is a later sprint. Deploys on **Vercel**
 (App Router + SSG, security headers in `next.config.ts`). All testing local for now.

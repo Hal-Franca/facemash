@@ -1,12 +1,14 @@
 "use client";
-import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { catalog } from "@/data";
 import type { Affiliation, Character, Gender, Rating, Species } from "@/data/types";
 import { BASE_ELO, pickPair } from "@/lib/elo";
 import { useRatings } from "@/lib/store";
 import { useTheme } from "@/components/ThemeProvider";
-import { AffiliationBadge, CharacterPortrait, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, RankRow, StatCard, StatDetails, StatHeading } from "@/components/CharacterCard";
+import { FilterSelect } from "@/components/FilterSelect";
+import { SiteHeader } from "@/components/SiteHeader";
 import { buildBoard } from "@/lib/ranking";
 
 type AffFilter = Affiliation | "all";
@@ -41,42 +43,6 @@ function BackToTop() {
     >
       ↑ Top
     </button>
-  );
-}
-const SELECT_CLS =
-  "w-full appearance-none rounded-lg border border-zinc-300 bg-white p-2 pr-10 text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:[color-scheme:dark]";
-
-/** Native select + custom chevron (browser arrows ignore padding, so we draw our own). */
-function FilterSelect({
-  label,
-  value,
-  onChange,
-  children,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  children: ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-1 text-sm">
-      {label}
-      <span className="relative block">
-        <select value={value} onChange={(e) => onChange(e.target.value)} className={SELECT_CLS}>
-          {children}
-        </select>
-        <svg
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-70"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
-          <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </span>
-    </label>
   );
 }
 
@@ -176,7 +142,6 @@ export default function Home() {
   const [species, setSpecies] = useState<SpeciesFilter>("all");
   const [flipEnabled, setFlipEnabled] = useState(true);
   const [showBelow, setShowBelow] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(20);
 
   const pool = useMemo(
     () =>
@@ -238,11 +203,9 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight">Facemash — DC Supers</h1>
-          <p className="opacity-70">Who wins? Click to vote. Elo-ranked, stored locally.</p>
-        </div>
+      <SiteHeader />
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="opacity-70">Who wins? Click to vote. Elo-ranked, stored locally.</p>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setFlipEnabled((s) => !s)} className="rounded-full border px-4 py-2 text-sm" aria-pressed={flipEnabled}>
             {flipEnabled ? "🂠 Flip: on" : "🂠 Flip: off"}
@@ -254,23 +217,23 @@ export default function Home() {
             {!mounted || theme === "dark" ? "☀ Light" : "🌙 Dark"}
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Filters */}
       <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
-        <FilterSelect label="Affiliation" value={aff} onChange={(v) => { setAff(v as AffFilter); setVisibleCount(20); }}>
+        <FilterSelect label="Affiliation" value={aff} onChange={(v) => setAff(v as AffFilter)}>
           <option value="all">All</option>
           <option value="hero">Hero</option>
           <option value="anti-hero">Anti-hero</option>
           <option value="villain">Villain</option>
         </FilterSelect>
-        <FilterSelect label="Gender" value={gender} onChange={(v) => { setGender(v as GenderFilter); setVisibleCount(20); }}>
+        <FilterSelect label="Gender" value={gender} onChange={(v) => setGender(v as GenderFilter)}>
           <option value="all">All</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
           <option value="other">Other</option>
         </FilterSelect>
-        <FilterSelect label="Species" value={species} onChange={(v) => { setSpecies(v as SpeciesFilter); setVisibleCount(20); }}>
+        <FilterSelect label="Species" value={species} onChange={(v) => setSpecies(v as SpeciesFilter)}>
           <option value="all">All</option>
           <option value="human">Human</option>
           <option value="meta-human">Meta-human</option>
@@ -320,51 +283,38 @@ export default function Home() {
         </section>
       )}
 
-      {/* Rankings */}
+      {/* Rankings: fixed top 20. Full browsing lives on /roster and /ladder. */}
       <section className="mt-10">
-        <h2 className="text-xl font-bold">Rankings ({ranked.length})</h2>
-        <p className="mt-1 text-sm opacity-60">Showing {Math.min(visibleCount, ranked.length)} of {ranked.length}</p>
+        <h2 className="text-xl font-bold">Top 20 ({ranked.length})</h2>
         <ol className="mt-3 grid gap-2 md:grid-cols-2">
-          {ranked.slice(0, visibleCount).map((r) => {
+          {ranked.slice(0, 20).map((r) => {
             const c = byId.get(r.id)!;
             return (
-              <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm">
-                <span className="flex min-w-0 flex-1 items-center gap-2">
-                  <span className="w-10 shrink-0 font-black opacity-60">#{r.rank}</span>
-                  <Link href={`/characters/${c.id}`} className="truncate font-semibold hover:underline">
-                    {c.superName} <span className="font-normal opacity-60">({c.name})</span>
-                  </Link>
-                  <AffiliationBadge value={c.affiliation} />
-                  <span className="hidden shrink-0 capitalize opacity-60 sm:inline">{c.species}</span>
-                </span>
-                <span className="shrink-0 whitespace-nowrap opacity-80">{r.elo} · {r.wins}W/{r.battles - r.wins}L</span>
-              </li>
+              <RankRow
+                key={c.id}
+                rank={r.rank}
+                c={c}
+                elo={r.elo}
+                wins={r.wins}
+                losses={r.battles - r.wins}
+              />
             );
           })}
         </ol>
-        {ranked.length > 20 && (
-          <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
-            {visibleCount < ranked.length && (
-              <button onClick={() => setVisibleCount((v) => Math.min(v + 20, ranked.length))} className="rounded-full border px-4 py-2">
-                Show more ({ranked.length - visibleCount} left)
-              </button>
-            )}
-            {visibleCount > 20 && visibleCount < ranked.length && (
-              <button onClick={() => setVisibleCount((v) => Math.max(20, v - 20))} className="rounded-full border px-4 py-2">
-                Show less
-              </button>
-            )}
-            {visibleCount < ranked.length ? (
-              <button onClick={() => setVisibleCount(ranked.length)} className="rounded-full border px-4 py-2">
-                Show all ({ranked.length})
-              </button>
-            ) : (
-              <button onClick={() => setVisibleCount(20)} className="rounded-full border px-4 py-2">
-                Show less (back to 20)
-              </button>
-            )}
-          </div>
-        )}
+        <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
+          <Link
+            href={`/roster?aff=${aff}&gender=${gender}&species=${species}`}
+            className="rounded-full border px-4 py-2"
+          >
+            View full roster
+          </Link>
+          <Link
+            href={`/ladder?aff=${aff}&gender=${gender}&species=${species}`}
+            className="rounded-full border px-4 py-2"
+          >
+            View full ladder
+          </Link>
+        </div>
       </section>
       <BackToTop />
     </main>

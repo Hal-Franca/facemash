@@ -33,6 +33,8 @@ Cards live in the **Kanban Markdown board**, not in this file:
   responsive, flip cards + badges, hydration fix, README/validation/green builds,
   footer + image disclaimer.
 - In progress: Vercel deploy, licensed portrait upgrades.
+- Shipped this round: README story, DC logo header + side drawer (Arena/Roster/Ladder),
+  home top-20 lock, `/roster` (images, A–Z/Z–A/rank, filters, rank chips), `/ladder` (full text board).
 - Next (To Do): global votes backend, admin CRUD, anti-bot, Playwright E2E,
   `develop` + CI + branch protection.
 - Backlog: PT-BR i18n, Marvel universe, Anime, PWA/share/SEO, Glicko-2 + seasons.
