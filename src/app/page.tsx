@@ -79,16 +79,28 @@ function FilterSelect({
   );
 }
 
-function VoteCard({
+function SideCard({
   c,
   rating,
   flipEnabled,
+  showBelow,
   onVote,
+  skipLabel,
+  onSkip,
+  headerCls,
+  portraitCls,
+  belowCls,
 }: {
   c: Character;
   rating: Rating | undefined;
   flipEnabled: boolean;
+  showBelow: boolean;
   onVote: () => void;
+  skipLabel: string;
+  onSkip: () => void;
+  headerCls: string;
+  portraitCls: string;
+  belowCls: string;
 }) {
   const [hover, setHover] = useState(false);
   const [pinned, setPinned] = useState(false);
@@ -96,8 +108,37 @@ function VoteCard({
   const elo = rating?.elo ?? BASE_ELO;
 
   return (
-    <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
+    <>
+      <div className={headerCls}>
+        <p className="text-center text-lg font-bold">
+          {c.superName} <span className="font-normal opacity-60">({c.name})</span>
+        </p>
+        <p className="mt-3 flex items-center justify-center gap-2">
+          <AffiliationBadge value={c.affiliation} />
+          <span className="text-sm capitalize opacity-60">{c.species}</span>
+          <span
+            role="button"
+            tabIndex={0}
+            title={pinned ? "Unpin stats" : "Pin stats on card"}
+            aria-label={pinned ? `Unpin ${c.superName} stats` : `Pin ${c.superName} stats`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setPinned((p) => !p);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setPinned((p) => !p);
+              }
+            }}
+            className="cursor-pointer rounded-full border px-2 py-0.5 text-xs opacity-70 hover:opacity-100"
+          >
+            {pinned ? "📌 pinned" : "ⓘ stats"}
+          </span>
+        </p>
+      </div>
+      <div className={portraitCls} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
         <div className="[perspective:1200px]">
           <div
             className="relative transition-transform duration-300 [transform-style:preserve-3d]"
@@ -114,34 +155,15 @@ function VoteCard({
             </div>
           </div>
         </div>
-      </button>
-      <p className="mt-2 text-center text-lg font-bold">
-        {c.superName} <span className="font-normal opacity-60">({c.name})</span>
-      </p>
-      <p className="mt-3 flex items-center justify-center gap-2">
-        <AffiliationBadge value={c.affiliation} />
-        <span className="text-sm capitalize opacity-60">{c.species}</span>
-        <span
-          role="button"
-          tabIndex={0}
-          title={pinned ? "Unpin stats" : "Pin stats on card"}
-          aria-label={pinned ? `Unpin ${c.superName} stats` : `Pin ${c.superName} stats`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setPinned((p) => !p);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setPinned((p) => !p);
-            }
-          }}
-          className="cursor-pointer rounded-full border px-2 py-0.5 text-xs opacity-70 hover:opacity-100"
-        >
-          {pinned ? "📌 pinned" : "ⓘ stats"}
-        </span>
-      </p>
-    </div>
+        </button>
+      </div>
+      <div className={belowCls}>
+        {showBelow && <StatCard c={c} elo={elo} />}
+        <p className="mt-3 text-center text-sm">
+          <button onClick={onSkip} className="rounded-full border px-4 py-2">{skipLabel}</button>
+        </p>
+      </div>
+    </>
   );
 }
 
@@ -250,12 +272,17 @@ export default function Home() {
       {/* Arena */}
       {left && right ? (
         <section className="mt-6">
-          {/* Row 1: portraits (+OR). Row 2: stats + per-card skips. Middle stays centered on the portraits. */}
+          {/* R1: names. R2: portraits (+OR). R3: stats + per-card skips. Middle locked to the portraits. */}
           <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[1fr_auto_1fr]">
-            <div className="order-1 sm:col-start-1 sm:row-start-1">
-              <VoteCard c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} onVote={() => choose(left.id, right.id)} />
-            </div>
-            <div className="order-3 flex flex-col items-center justify-center gap-2 sm:order-2 sm:col-start-2 sm:row-start-1 sm:min-w-28 sm:gap-3 sm:self-center">
+            <SideCard
+              c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow}
+              onVote={() => choose(left.id, right.id)}
+              skipLabel="Skip right (keep left)" onSkip={() => skipOne(left.id)}
+              headerCls="order-1 sm:col-start-1 sm:row-start-1"
+              portraitCls="order-2 sm:col-start-1 sm:row-start-2"
+              belowCls="order-3 flex flex-col sm:order-6 sm:col-start-1 sm:row-start-3"
+            />
+            <div className="order-4 flex flex-col items-center justify-center gap-2 sm:col-start-2 sm:row-start-2 sm:min-w-28 sm:gap-3 sm:self-center">
               <div className="flex w-full items-center gap-3 sm:w-auto">
                 <span className="h-px flex-1 bg-zinc-300 sm:hidden dark:bg-zinc-700" aria-hidden="true" />
                 <div className="font-black opacity-50">OR</div>
@@ -263,21 +290,14 @@ export default function Home() {
               </div>
               <button onClick={skipBoth} className="rounded-full border px-4 py-2 text-sm">Skip both ⟳</button>
             </div>
-            <div className="order-4 sm:order-3 sm:col-start-3 sm:row-start-1">
-              <VoteCard c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} onVote={() => choose(right.id, left.id)} />
-            </div>
-            <div className="order-2 flex flex-col sm:order-4 sm:col-start-1 sm:row-start-2">
-              {showBelow && <StatCard c={left} elo={rOf(left.id)?.elo ?? BASE_ELO} />}
-              <p className="mt-3 text-center text-sm">
-                <button onClick={() => skipOne(left.id)} className="rounded-full border px-4 py-2">Skip right (keep left)</button>
-              </p>
-            </div>
-            <div className="order-5 flex flex-col sm:col-start-3 sm:row-start-2">
-              {showBelow && <StatCard c={right} elo={rOf(right.id)?.elo ?? BASE_ELO} />}
-              <p className="mt-3 text-center text-sm">
-                <button onClick={() => skipOne(right.id)} className="rounded-full border px-4 py-2">Skip left (keep right)</button>
-              </p>
-            </div>
+            <SideCard
+              c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow}
+              onVote={() => choose(right.id, left.id)}
+              skipLabel="Skip left (keep right)" onSkip={() => skipOne(right.id)}
+              headerCls="order-5 sm:col-start-3 sm:row-start-1"
+              portraitCls="order-6 sm:col-start-3 sm:row-start-2"
+              belowCls="order-7 flex flex-col sm:order-7 sm:col-start-3 sm:row-start-3"
+            />
           </div>
         </section>
       ) : mounted ? (
