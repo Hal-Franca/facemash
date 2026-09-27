@@ -30,13 +30,17 @@ function villain(
     species,
     powers,
     firstAppearance: { comic, issue, year },
-    bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    // Characters with no civilian identity (e.g. Bane) pass name: "" —
+    // bio then leads with the super name instead of "X is Y of ...".
+    bio: name && name !== superName
+      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
+      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
     image: artFor(id, superName),
   };
 }
 
 export const dcVillains: Character[] = [
-  villain("dc-joker", "Joker", "Jack Napier / Unknown", E0, ["Injustice Gang", "Independent"], "male", "human",
+  villain("dc-joker", "Joker", "", E0, ["Injustice Gang", "Independent"], "male", "human",
     ["Criminal genius", "Toxins", "Unpredictability"],
     "Batman", "#1", 1940, "Clown Prince of Crime, Batman's nemesis."),
   villain("dc-lex-luthor", "Lex Luthor", "Alexander Joseph Luthor", E0, ["Legion of Doom", "LexCorp"], "male", "human",
@@ -66,7 +70,7 @@ export const dcVillains: Character[] = [
   villain("dc-riddler", "The Riddler", "Edward Nygma", E0, ["Gotham underworld", "Legion of Doom"], "male", "human",
     ["Genius puzzles", "Lateral thinking"],
     "Detective Comics", "#140", 1948, "Puzzle-obsessed Gotham criminal."),
-  villain("dc-bane", "Bane", "Eduardo Dorrance", E0, ["Gotham underworld", "Secret Six"], "male", "human",
+  villain("dc-bane", "Bane", "", E0, ["Gotham underworld", "Secret Six"], "male", "human",
     ["Venom strength", "Tactical genius"],
     "Batman: Vengeance of Bane", "#1", 1993, "The man who broke the Bat."),
   villain("dc-two-face", "Two-Face", "Harvey Dent", E0, ["Gotham underworld"], "male", "human",

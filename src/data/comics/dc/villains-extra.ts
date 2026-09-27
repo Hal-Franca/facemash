@@ -22,7 +22,9 @@ function v(
     id, superName, name, category: "comics", universe: "dc",
     universeLabel, teams, affiliation: "villain", gender, species, powers,
     firstAppearance: { comic, issue, year },
-    bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: name && name !== superName
+      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
+      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
     image: artFor(id, superName),
   };
 }
@@ -50,7 +52,7 @@ export const dcVillainsExtra: Character[] = [
     ["Technopathy", "Kryptonian powers"], "Adventures of Superman", "#500", 1993, "Astronaut turned machine Superman."),
   v("dc-damien-darhk", "Damien Darhk", "Damien Darhk", E0, ["League of Assassins", "H.I.V.E."], "male", "human",
     ["Sorcery", "Longevity"], "The Titans", "#1", 1999, "Immortal mystical crime lord."),
-  v("dc-deathstorm", "Deathstorm", "Martin Stein", E0, ["Black Lantern Corps"], "male", "other",
+  v("dc-deathstorm", "Deathstorm", "Ronnie Raymond", E0, ["Black Lantern Corps"], "male", "other",
     ["Death powers", "Nuclear blasts"], "Blackest Night", "#2", 2009, "Undead Firestorm of death."),
   v("dc-despero", "Despero", "Despero", E0, ["Independent"], "male", "alien",
     ["Psychic powers", "Super strength"], "Justice League of America", "#1", 1960, "Third-eyed Kalanorian tyrant."),
@@ -122,7 +124,7 @@ export const dcVillainsExtra: Character[] = [
     ["Immortality", "Tactics"], "Green Lantern", "#10", 1943, "50,000-year-old immortal tyrant."),
   v("dc-ravager-grant", "Ravager", "Grant Wilson", E0, ["H.I.V.E."], "male", "human",
     ["Enhanced strength"], "New Teen Titans", "#1", 1980, "Deathstroke's son, first Ravager."),
-  v("dc-johnny-quick", "Johnny Quick", "John Chambers", E3, ["Crime Syndicate"], "male", "meta-human",
+  v("dc-johnny-quick", "Johnny Quick", "Jonathan Allen", E3, ["Crime Syndicate"], "male", "meta-human",
     ["Super speed"], "Justice League", "#23", 2013, "Earth-3's speedster criminal."),
   v("dc-anti-monitor", "Anti-Monitor", "Mobius", E0, ["Independent"], "male", "other",
     ["Antimatter", "Multiverse threat"], "Crisis on Infinite Earths", "#2", 1985, "Devourer of universes."),
@@ -132,7 +134,7 @@ export const dcVillainsExtra: Character[] = [
     ["Trick boomerangs"], "Flash", "#117", 1960, "Aussie Rogue with razorangs."),
   v("dc-solomon-grundy", "Solomon Grundy", "Cyrus Gold", E0, ["Independent"], "male", "other",
     ["Super strength", "Resurrection"], "All-American Comics", "#61", 1944, "Undead Slaughter Swamp monster."),
-  v("dc-superboy-prime", "Superboy Prime", "Kon-El", "DC Universe — Earth-Prime", ["Sinestro Corps"], "male", "alien",
+  v("dc-superboy-prime", "Superboy Prime", "Clark Kent", "DC Universe — Earth-Prime", ["Sinestro Corps"], "male", "alien",
     ["Kryptonian powers", "Reality punches"], "DC Comics Presents", "#87", 1985, "Evil Prime-Earth Superboy."),
   v("dc-thinker", "Thinker", "Clifford DeVoe", E0, ["Injustice Society"], "male", "human",
     ["Thinking cap", "Telepathy"], "All-Flash", "#12", 1943, "Scheming mind-capped mastermind."),

@@ -5,9 +5,11 @@ let bad = 0;
 for (const c of catalog) {
   if (ids.has(c.id)) { console.error(`duplicate id: ${c.id}`); bad++; }
   ids.add(c.id);
-  for (const f of ["superName", "name", "affiliation", "gender", "species"] as const) {
+  for (const f of ["superName", "affiliation", "gender", "species"] as const) {
     if (!c[f]) { console.error(`${c.id} missing ${f}`); bad++; }
   }
+  // name may be "" when the character has no civilian identity (e.g. Bane)
+  if (typeof c.name !== "string") { console.error(`${c.id} missing ${"name"}`); bad++; }
   if (!c.firstAppearance?.comic || !c.firstAppearance?.issue || !c.firstAppearance?.year) {
     console.error(`${c.id} missing firstAppearance`); bad++;
   }

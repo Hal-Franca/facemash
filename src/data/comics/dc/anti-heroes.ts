@@ -34,7 +34,9 @@ function antiHero(
     species,
     powers,
     firstAppearance: { comic, issue, year },
-    bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: name && name !== superName
+      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
+      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
     image: artFor(id, superName),
   };
 }
@@ -79,7 +81,7 @@ export const dcAntiHeroes: Character[] = [
   antiHero("dc-lady-shiva", "Lady Shiva", "Sandra Wu-San", E0, ["League of Assassins", "Independent martial artist"], "female", "human",
     ["World's deadliest hands", "Body reading"],
     "Richard Dragon, Kung Fu Fighter", "#5", 1975, "Deadliest martial artist alive."),
-  antiHero("dc-etrigan", "Etrigan", "Jason Blood / Etrigan", E0, ["Justice League Dark", "Independent"], "male", "other",
+  antiHero("dc-etrigan", "Etrigan", "Jason Blood", E0, ["Justice League Dark", "Independent"], "male", "other",
     ["Demonic strength", "Hellfire", "Rhyming magic"],
     "The Demon", "#1", 1972, "Demon bound to Jason Blood, rhymes in battle."),
   antiHero("dc-swamp-thing", "Swamp Thing", "Alec Holland", E0, ["Parliament of Green", "Justice League Dark"], "male", "other",

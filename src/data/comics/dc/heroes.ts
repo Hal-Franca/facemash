@@ -36,7 +36,9 @@ function hero(
     species,
     powers,
     firstAppearance: { comic, issue, year },
-    bio: `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: name && name !== superName
+      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
+      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
     image: artFor(id, superName),
   };
 }

@@ -9,6 +9,12 @@ const AFFILIATION_STYLES: Record<Affiliation, string> = {
   other: "bg-zinc-500/15 text-zinc-700 ring-zinc-500/40 dark:text-zinc-300",
 };
 
+/** True when the character has a civilian identity worth showing in parentheses.
+ * Empty (e.g. Bane) or identical to the super name (e.g. Ra's al Ghul) → show super name alone. */
+export function hasRealName(c: { superName: string; name: string }) {
+  return !!c.name && c.name !== c.superName;
+}
+
 /** Color-coded moral-role badge: hero (blue) / villain (red) / anti-hero (amber). */
 export function AffiliationBadge({ value }: { value: Affiliation }) {
   return (
@@ -59,7 +65,7 @@ export function RankRow({
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <span className="w-10 shrink-0 font-black opacity-60">#{rank}</span>
         <Link href={`/dc/characters/${c.id}`} className="truncate font-semibold hover:underline">
-          {c.superName} <span className="font-normal opacity-60">({c.name})</span>
+          {c.superName}{hasRealName(c) && <span className="font-normal opacity-60"> ({c.name})</span>}
         </Link>
         <span className="hidden sm:inline-flex">
           <AffiliationBadge value={c.affiliation} />
@@ -145,7 +151,7 @@ export function CharacterPortrait({ c, priority = false }: { c: Character; prior
 
 export function StatCard({ c, elo, className = "" }: { c: Character; elo?: number; className?: string }) {
   return (
-    <div className={`mt-3 w-full flex-1 rounded-2xl border border-zinc-200 bg-white/80 p-4 text-left text-sm dark:border-zinc-800 dark:bg-zinc-950/80 ${className}`}>
+    <div className={`mt-2 w-full flex-1 rounded-2xl border border-zinc-200 bg-white/80 p-3 text-left text-xs sm:mt-3 sm:p-4 sm:text-sm dark:border-zinc-800 dark:bg-zinc-950/80 ${className}`}>
       <StatHeading c={c} />
       <StatDetails c={c} elo={elo} />
     </div>
@@ -156,7 +162,7 @@ export function StatCard({ c, elo, className = "" }: { c: Character; elo?: numbe
 export function StatHeading({ c }: { c: Character }) {
   return (
     <p className="text-base font-bold sm:text-lg">
-      {c.superName} <span className="font-normal opacity-70">({c.name})</span>
+      {c.superName}{hasRealName(c) && <span className="font-normal opacity-70"> ({c.name})</span>}
     </p>
   );
 }
@@ -165,24 +171,25 @@ export function StatHeading({ c }: { c: Character }) {
 export function StatDetails({ c, elo }: { c: Character; elo?: number }) {
   return (
     <>
-      <dl className="mt-2 space-y-1 opacity-90">
-        <div className="flex gap-2"><dt className="font-semibold">Universe:</dt><dd>{c.universeLabel}</dd></div>
+      {/* Stacked label-over-value on mobile (narrow columns), side-by-side on sm+. */}
+      <dl className="mt-2 space-y-1.5 opacity-90 sm:space-y-1">
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Universe:</dt><dd className="min-w-0 break-words">{c.universeLabel}</dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">Affiliation:</dt><dd><AffiliationBadge value={c.affiliation} /></dd></div>
+        <div className="flex flex-col gap-1 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Affiliation:</dt><dd className="min-w-0 break-words"><AffiliationBadge value={c.affiliation} /></dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">Teams:</dt><dd>{c.teams.join("; ")}</dd></div>
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Teams:</dt><dd className="min-w-0 break-words">{c.teams.join("; ")}</dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">Gender:</dt><dd className="capitalize">{c.gender}</dd></div>
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Gender:</dt><dd className="min-w-0 capitalize break-words">{c.gender}</dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">Species:</dt><dd className="capitalize">{c.species}</dd></div>
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Species:</dt><dd className="min-w-0 capitalize break-words">{c.species}</dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">First appearance:</dt><dd>{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">First appearance:</dt><dd className="min-w-0 break-words">{c.firstAppearance.comic} {c.firstAppearance.issue} ({c.firstAppearance.year})</dd></div>
         <hr className="border-zinc-300 dark:border-zinc-700" />
-        <div className="flex gap-2"><dt className="font-semibold">Powers:</dt><dd>{c.powers.join(", ")}</dd></div>
+        <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Powers:</dt><dd className="min-w-0 break-words">{c.powers.join(", ")}</dd></div>
         {typeof elo === "number" && (
           <>
             <hr className="border-zinc-300 dark:border-zinc-700" />
-            <div className="flex gap-2"><dt className="font-semibold">Elo:</dt><dd>{elo}</dd></div>
+            <div className="flex flex-col gap-0 sm:flex-row sm:gap-2"><dt className="text-xs font-semibold uppercase tracking-wide opacity-60 sm:text-sm sm:normal-case sm:tracking-normal sm:opacity-100">Elo:</dt><dd className="min-w-0 break-words">{elo}</dd></div>
           </>
         )}
       </dl>

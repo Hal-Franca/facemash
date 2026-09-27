@@ -15,7 +15,8 @@ describe("catalog integrity", () => {
   it("every character has required fields", () => {
     for (const c of catalog) {
       expect(c.superName, c.id).toBeTruthy();
-      expect(c.name, c.id).toBeTruthy();
+      // name may be "" when the character has no civilian identity (e.g. Bane)
+      expect(typeof c.name, c.id).toBe("string");
       expect(c.powers.length, c.id).toBeGreaterThan(0);
       expect(c.firstAppearance.year, c.id).toBeGreaterThan(1900);
       expect(c.teams.length, c.id).toBeGreaterThan(0);

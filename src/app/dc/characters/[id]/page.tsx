@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { catalog, getCharacter } from "@/data";
-import { AffiliationBadge, CharacterPortrait, StatCard } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, StatCard, hasRealName } from "@/components/CharacterCard";
 import { SiteHeader } from "@/components/SiteHeader";
 
 export function generateStaticParams() {
@@ -35,7 +35,7 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
       <SiteHeader />
       <Link href="/dc/arena" className="mt-3 inline-block text-sm underline opacity-70">← Back to arena</Link>
       <h1 className="mt-2 text-3xl font-black">{c.superName}</h1>
-      <p className="opacity-70">{c.name} · {c.universe.toUpperCase()} · {c.category}</p>
+      <p className="opacity-70">{hasRealName(c) ? `${c.name} · ` : ""}{c.universe.toUpperCase()} · {c.category}</p>
       <p className="mt-2 flex items-center gap-2">
         <AffiliationBadge value={c.affiliation} />
         <span className="text-sm capitalize opacity-60">{c.species}</span>

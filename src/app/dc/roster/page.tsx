@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FilterSelect } from "@/components/FilterSelect";
-import { AffiliationBadge, CharacterPortrait } from "@/components/CharacterCard";
+import { AffiliationBadge, CharacterPortrait, hasRealName } from "@/components/CharacterCard";
 import {
   parseFilters,
   useBoard,
@@ -115,8 +115,9 @@ function RosterInner() {
               >
                 <CharacterPortrait c={c} />
                 <p className="mt-2 truncate text-center text-sm font-bold">
-                  #{r.rank} · {c.superName}{" "}
-                  <span className="font-normal opacity-60">({c.name})</span>
+                  #{r.rank} · {c.superName}{hasRealName(c) && (
+                    <span className="font-normal opacity-60"> ({c.name})</span>
+                  )}
                 </p>
                 <p className="mt-1 flex items-center justify-center gap-2">
                   <AffiliationBadge value={c.affiliation} />
