@@ -31,7 +31,7 @@ function VsBadge() {
       aria-hidden="true"
       className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-amber-400 bg-[#0d0d2b] shadow-[0_0_12px_rgba(251,191,36,0.45)] sm:h-14 sm:w-14"
     >
-      <span className="-skew-x-6 bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-base font-black italic tracking-tight text-transparent sm:text-xl">
+      <span className="bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-base font-black italic leading-none tracking-normal text-transparent sm:text-xl">
         VS
       </span>
     </div>
