@@ -18,9 +18,9 @@ further: best of the Bat-Family? Of the Lanterns? Of villains?
 **Why DC first:** 250 DC characters are the template. Once the design, ranking
 engine and data model are proven here, Marvel and anime plug into the same system.
 
-Votes apply instantly locally, then sync to the server board when a database is
-configured — the header shows "shared global board" vs "stored locally".
-Without `POSTGRES_URL`, everything stays in `localStorage` (nothing breaks).
+Votes apply instantly with a green confirm flash, then sync to the shared global
+board — rankings reflect all voters on all devices. Without `POSTGRES_URL`,
+everything stays in `localStorage` (nothing breaks).
 Deploys on **Vercel** (App Router + SSG, security headers in `next.config.ts`).
 
 ## Global board setup (Neon Postgres via Vercel, free tier)
@@ -64,11 +64,13 @@ npm run build
 - 1v1 arena (`/dc/arena`), click to vote, Elo rating (K=32, base 1400 FIDE floor) — `src/lib/elo.ts:1`
 - Rankings: Elo → wins → battles → A–Z, competition ranks (`#1, #2A, #2B…`),
   SC2-style tiers (bronze→diamond bands, Grandmaster = top-20 rows) — `src/lib/ranking.ts:1`
-- Skip: both sides ⟳, keep-left, keep-right; per-card skip buttons under portraits
+- Skip: unified Keep left / Skip ⟳ / Keep right divider bar under every matchup
+  (all screens); VS badge styled after the favicon; blue-vs-red corner names
 - Flip-card stats (adjustable speed, pinnable) + optional stats-below; hover/tap stat
   card: super name, civil name, universe, affiliation badge, teams, gender, species,
   first appearance (comic + issue + year), powers, Elo, bio
-- Filters (affiliation / gender / species) + name search on roster + ladder
+- Filters (affiliation / gender / species) with one-tap Clear ✕ on arena, roster
+  and ladder + name search on roster + ladder
 - Home top-20, full `/dc/roster` (image grid, A–Z/Z–A/rank sort, rank chips),
   full `/dc/ladder` (text board), character pages `/dc/characters/[id]` with tab titles
 - Side drawer nav (Arena/Roster/Ladder) + DC logo header, per-page theme toggle,
@@ -145,4 +147,9 @@ SSG). If you outgrow Vercel DB costs, migrate data layer to Cloudflare D1 —
 
 See `KANBAN.md` + board (`.devtool/features/`). Shipped global board API
 (`GET /api/ratings`, `POST /api/vote`, Vercel Postgres); remaining: provision DB,
-admin CRUD, PT-BR i18n, Marvel + Anime universes, guessing game, tag system.
+admin CRUD, PT-BR i18n (+ header PT-BR/ENG toggle), Marvel + Anime universes,
+guessing game, tag system.
+
+Growth pools (all backlog, each needs a category-model extension + art sourcing):
+other comics (Spawn, Invincible…), TV shows, doramas, novelas, books, movies,
+sports teams, video games.

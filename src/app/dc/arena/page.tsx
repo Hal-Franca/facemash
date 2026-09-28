@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { catalog } from "@/data";
 import type { Affiliation, Character, Gender, Rating, Species } from "@/data/types";
@@ -24,15 +24,28 @@ function useMounted() {
   );
 }
 
+/** Versus badge styled after the site favicon: gold ring, navy face, gold VS. */
+function VsBadge() {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-amber-400 bg-[#0d0d2b] shadow-[0_0_12px_rgba(251,191,36,0.45)] sm:h-14 sm:w-14"
+    >
+      <span className="-skew-x-6 bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-base font-black italic tracking-tight text-transparent sm:text-xl">
+        VS
+      </span>
+    </div>
+  );
+}
+
 function SideCard({
   c,
   rating,
   flipEnabled,
   showBelow,
   onVote,
-  skipLabel,
-  skipShortLabel,
-  onSkip,
+  flash,
+  accent,
   headerCls,
   portraitCls,
   belowCls,
@@ -42,9 +55,9 @@ function SideCard({
   flipEnabled: boolean;
   showBelow: boolean;
   onVote: () => void;
-  skipLabel: string;
-  skipShortLabel: string;
-  onSkip: () => void;
+  flash: boolean;
+  /** Corner color: left card blue, right card red — the favicon faceoff. */
+  accent: "blue" | "red";
   headerCls: string;
   portraitCls: string;
   belowCls: string;
@@ -59,14 +72,14 @@ function SideCard({
   return (
     <>
       <div className={headerCls}>
-        <p className="text-center text-sm font-bold break-words sm:text-lg">{c.superName}</p>
+        <p className={`text-center text-sm font-bold break-words sm:text-lg ${accent === "blue" ? "text-sky-600 dark:text-sky-400" : "text-red-600 dark:text-red-400"}`}>{c.superName}</p>
         {hasRealName(c) && (
           <p className="text-center text-xs font-normal break-words opacity-60 sm:text-sm">{c.name}</p>
         )}
       </div>
       <div className={portraitCls} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
         <button onClick={onVote} className="block w-full text-left" aria-label={`Vote ${c.superName}`}>
-        <div className="[perspective:1200px]">
+        <div className={`[perspective:1200px] rounded-2xl transition-all ${flash ? "ring-8 ring-green-500 motion-safe:scale-[1.02]" : ""}`}>
           <div
             className={`relative transition-transform duration-[400ms] [transform-style:preserve-3d] ${flipped ? "sm:[transform:rotateY(180deg)]" : "sm:[transform:rotateY(0deg)]"}`}
           >
@@ -84,11 +97,9 @@ function SideCard({
         </button>
       </div>
       <div className={belowCls}>
-        <div className="mt-2 flex flex-col items-center gap-1.5 text-xs sm:mt-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-2 sm:text-sm">
-          <p className="flex items-center justify-center gap-1.5 sm:gap-2">
-            <AffiliationBadge value={c.affiliation} />
-            <span className="capitalize opacity-60">{c.species}</span>
-          </p>
+        <div className="mt-2 flex flex-col items-center gap-1 text-xs sm:mt-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-2 sm:text-sm">
+          <AffiliationBadge value={c.affiliation} />
+          <span className="capitalize opacity-60">{c.species}</span>
           <span
             role="button"
             tabIndex={0}
@@ -115,12 +126,6 @@ function SideCard({
             <StatCard c={c} elo={elo} />
           </div>
         )}
-        <p className="mt-2 hidden text-center text-xs sm:mt-3 sm:block sm:text-sm">
-          <button onClick={onSkip} className="rounded-full border px-3 py-1.5 sm:px-4 sm:py-2">
-            <span className="hidden sm:inline">{skipLabel}</span>
-            <span className="sm:hidden">{skipShortLabel}</span>
-          </button>
-        </p>
       </div>
     </>
   );
@@ -147,8 +152,14 @@ export default function Home() {
   );
   const poolIds = useMemo(() => pool.map((c) => c.id), [pool]);
 
-  const { ratings, vote, mode } = useRatings(poolIds);
+  const { ratings, vote } = useRatings(poolIds);
   const [pair, setPair] = useState<[string, string] | null>(null);
+  // Winner-flash feedback: portrait glows green briefly before the next pair.
+  const [justVoted, setJustVoted] = useState<string | null>(null);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (flashTimer.current) clearTimeout(flashTimer.current);
+  }, []);
   // Client-only randomness: null until mounted, so server + hydration HTML match.
   const activePair = useMemo(() => {
     if (!mounted || poolIds.length < 2) return null;
@@ -162,8 +173,15 @@ export default function Home() {
   const right = activePair ? pool.find((c) => c.id === activePair[1])! : null;
 
   const choose = (winnerId: string, loserId: string) => {
+    if (justVoted) return; // ignore taps during the flash
     vote(winnerId, loserId);
-    setPair(pickPair(poolIds));
+    setJustVoted(winnerId);
+    if (flashTimer.current) clearTimeout(flashTimer.current);
+    flashTimer.current = setTimeout(() => {
+      setPair(pickPair(poolIds));
+      setJustVoted(null);
+      flashTimer.current = null;
+    }, 320);
   };
   const skipBoth = () => setPair(pickPair(poolIds));
   const skipOne = (keepId: string) => {
@@ -198,7 +216,7 @@ export default function Home() {
       <SiteHeader />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <p className="opacity-70">
-          Who wins? Click to vote. Elo-ranked, {mode === "global" ? "shared global board" : "stored locally"}.
+          Who is your favorite? Click to vote. Elo-ranked, shared global board.
         </p>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setFlipEnabled((s) => !s)} className="hidden rounded-full border px-4 py-2 text-sm lg:inline-block" aria-pressed={flipEnabled}>
@@ -218,6 +236,21 @@ export default function Home() {
 
       {/* Filters */}
       <section className="mt-6 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
+        <div className="flex items-center justify-between sm:col-span-3">
+          <p className="text-sm font-semibold opacity-70">Filters</p>
+          {(aff !== "all" || gender !== "all" || species !== "all") && (
+            <button
+              onClick={() => {
+                setAff("all");
+                setGender("all");
+                setSpecies("all");
+              }}
+              className="rounded-full border px-3 py-1 text-xs"
+            >
+              Clear ✕
+            </button>
+          )}
+        </div>
         <FilterSelect label="Affiliation" value={aff} onChange={(v) => setAff(v as AffFilter)}>
           <option value="all">All</option>
           <option value="hero">Hero</option>
@@ -247,31 +280,32 @@ export default function Home() {
           <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 gap-y-3 sm:gap-x-6 sm:gap-y-4">
             <SideCard
               c={left} rating={rOf(left.id)} flipEnabled={flipEnabled} showBelow={showBelow}
-              onVote={() => choose(left.id, right.id)}
-              skipLabel="Skip right (keep left)" skipShortLabel="Skip →" onSkip={() => skipOne(left.id)}
+              onVote={() => choose(left.id, right.id)} flash={justVoted === left.id} accent="blue"
               headerCls="col-start-1 row-start-1"
               portraitCls="col-start-1 row-start-2"
-              belowCls="col-start-1 row-start-4 sm:row-start-3 flex flex-col"
+              belowCls="col-start-1 row-start-4 flex flex-col"
             />
             <div className="col-start-2 row-start-2 flex flex-col items-center justify-center gap-2 self-center sm:min-w-28 sm:gap-3">
-              <div className="text-sm font-black opacity-50 sm:text-base">OR</div>
-              <button onClick={skipBoth} className="hidden rounded-full border px-4 py-2 text-sm sm:inline-flex">Skip both ⟳</button>
+              <VsBadge />
             </div>
             <SideCard
               c={right} rating={rOf(right.id)} flipEnabled={flipEnabled} showBelow={showBelow}
-              onVote={() => choose(right.id, left.id)}
-              skipLabel="Skip left (keep right)" skipShortLabel="← Skip" onSkip={() => skipOne(right.id)}
+              onVote={() => choose(right.id, left.id)} flash={justVoted === right.id} accent="red"
               headerCls="col-start-3 row-start-1"
               portraitCls="col-start-3 row-start-2"
-              belowCls="col-start-3 row-start-4 sm:row-start-3 flex flex-col"
+              belowCls="col-start-3 row-start-4 flex flex-col"
             />
-            <div className="col-span-3 row-start-3 flex w-full items-center gap-2 sm:hidden">
+            <div className="col-start-1 row-start-3 flex w-full items-center gap-2">
               <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
-              <button onClick={() => skipOne(left.id)} className="shrink-0 rounded-full border px-3 py-1.5 text-xs" aria-label="Skip right, keep left">Skip →</button>
-              <span className="h-px w-4 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
-              <button onClick={skipBoth} className="shrink-0 rounded-full border px-3 py-1.5 text-xs">Skip both ⟳</button>
-              <span className="h-px w-4 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
-              <button onClick={() => skipOne(right.id)} className="shrink-0 rounded-full border px-3 py-1.5 text-xs" aria-label="Skip left, keep right">← Skip</button>
+              <button onClick={() => skipOne(left.id)} className="shrink-0 rounded-full border px-3 py-1.5 text-[11px] sm:px-5 sm:py-2 sm:text-sm" aria-label="Keep left card, skip right card">Keep left</button>
+              <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
+            </div>
+            <div className="col-start-2 row-start-3 flex w-full items-center justify-center">
+              <button onClick={skipBoth} className="shrink-0 rounded-full border px-3 py-1.5 text-[11px] sm:px-5 sm:py-2 sm:text-sm">Skip ⟳</button>
+            </div>
+            <div className="col-start-3 row-start-3 flex w-full items-center gap-2">
+              <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
+              <button onClick={() => skipOne(right.id)} className="shrink-0 rounded-full border px-3 py-1.5 text-[11px] sm:px-5 sm:py-2 sm:text-sm" aria-label="Keep right card, skip left card">Keep right</button>
               <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" aria-hidden="true" />
             </div>
           </div>
@@ -281,7 +315,7 @@ export default function Home() {
       ) : (
         <section className="mt-6 grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-6" aria-busy="true" aria-label="Loading matchup">
           <div className="aspect-[3/4] w-full animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
-          <div className="self-center text-center text-sm font-black opacity-50 sm:text-base">OR</div>
+          <div className="self-center"><VsBadge /></div>
           <div className="aspect-[3/4] w-full animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
         </section>
       )}

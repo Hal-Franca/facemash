@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Affiliation, Character } from "@/data/types";
 import type { Tier } from "@/lib/ranking";
+import { hasRealName } from "@/lib/names";
 
 const AFFILIATION_STYLES: Record<Affiliation, string> = {
   hero: "bg-sky-500/15 text-sky-700 ring-sky-500/40 dark:text-sky-300",
@@ -10,10 +11,9 @@ const AFFILIATION_STYLES: Record<Affiliation, string> = {
 };
 
 /** True when the character has a civilian identity worth showing in parentheses.
- * Empty (e.g. Bane) or identical to the super name (e.g. Ra's al Ghul) → show super name alone. */
-export function hasRealName(c: { superName: string; name: string }) {
-  return !!c.name && c.name !== c.superName;
-}
+ * Empty (e.g. Bane) or identical to the super name (e.g. Ra's al Ghul) → show super name alone.
+ * Re-exported here so card consumers keep a single import. */
+export { hasRealName };
 
 /** Color-coded moral-role badge: hero (blue) / villain (red) / anti-hero (amber). */
 export function AffiliationBadge({ value }: { value: Affiliation }) {

@@ -14,7 +14,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Skip",
-    body: "Don't know one side? Skip right (keep left), skip left (keep right), or skip both for a fresh pair. Skips never touch ratings.",
+    body: "Don't know one side? Keep left, keep right, or Skip ⟳ for a fresh pair. Skips never touch ratings.",
   },
   {
     title: "Rankings",
@@ -26,11 +26,11 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Filters & search",
-    body: "Narrow the pool by affiliation, gender, or species — rankings, arena, roster, and ladder all follow. Roster and Ladder also have name search (super name or real name) and A–Z / Z–A sorting. The arena stays random on purpose.",
+    body: "Narrow the pool by affiliation, gender, or species — rankings, arena, roster, and ladder all follow. A Clear ✕ button appears whenever filters or search are set, resetting them in one tap. Roster and Ladder also have name search (super name or real name) and A–Z / Z–A sorting. The arena stays random on purpose.",
   },
   {
     title: "Stats & flip cards",
-    body: "Hover a portrait (desktop) to flip it and reveal stats, or pin it with ⓘ stats. The Stats-below toggle shows full stat blocks under each card instead. Every card links to a full profile page.",
+    body: "Flip is off by default — turn it on with the 🂠 Flip toggle (desktop), then hover a portrait to flip it and reveal stats, or pin it with ⓘ stats. The Stats-below toggle shows full stat blocks under each card instead. Every card links to a full profile page.",
   },
   {
     title: "Your data",

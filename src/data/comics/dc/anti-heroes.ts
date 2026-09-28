@@ -1,5 +1,6 @@
 import type { Character } from "../../types";
 import { artFor } from "./art";
+import { buildBio } from "../../../lib/names";
 
 // NOTE: Ra's al Ghul + Talia al Ghul appear in your villains table too —
 // they are kept ONCE as villains (dc-ras-al-ghul, dc-talia-al-ghul) to avoid
@@ -34,9 +35,7 @@ function antiHero(
     species,
     powers,
     firstAppearance: { comic, issue, year },
-    bio: name && name !== superName
-      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
-      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: buildBio(superName, name, universeLabel, teams, bio),
     image: artFor(id, superName),
   };
 }
@@ -87,9 +86,6 @@ export const dcAntiHeroes: Character[] = [
   antiHero("dc-swamp-thing", "Swamp Thing", "Alec Holland", E0, ["Parliament of Green", "Justice League Dark"], "male", "other",
     ["The Green", "Regeneration", "Plant control"],
     "Swamp Thing", "#1", 1972, "Avatar of the Parliament of Green."),
-  antiHero("dc-red-x", "Red X", "Various identities", E0, ["Independent vigilante"], "male", "human",
-    ["Xenothium suit", "Teleportation", "Stealth tech"],
-    "Teen Titans", "#12", 2004, "Mystery thief haunting the Titans."),
   antiHero("dc-midnighter", "Midnighter", "Lucas Trent", "WildStorm / DC Universe", ["The Authority", "Stormwatch"], "male", "meta-human",
     ["Fight computer precognition", "Super strength", "Tactics"],
     "Stormwatch", "#4", 1994, "Brutal tactician who wins before fighting."),

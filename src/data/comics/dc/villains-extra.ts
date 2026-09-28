@@ -1,5 +1,6 @@
 import type { Character } from "../../types";
 import { artFor } from "./art";
+import { buildBio } from "../../../lib/names";
 
 const E0 = "DC Universe — Earth-0";
 const E3 = "DC Universe — Earth-3";
@@ -22,9 +23,7 @@ function v(
     id, superName, name, category: "comics", universe: "dc",
     universeLabel, teams, affiliation: "villain", gender, species, powers,
     firstAppearance: { comic, issue, year },
-    bio: name && name !== superName
-      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
-      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: buildBio(superName, name, universeLabel, teams, bio),
     image: artFor(id, superName),
   };
 }
@@ -46,6 +45,9 @@ export const dcVillainsExtra: Character[] = [
     ["Dark magic", "Cult leadership"], "New Teen Titans", "#21", 1982, "Immortal cultist Titan-foe."),
   v("dc-calculator", "Calculator", "Noah Kuttler", E0, ["Secret Society of Super Villains"], "male", "human",
     ["Genius intellect", "Hacking", "Technopathy"], "Detective Comics", "#463", 1976, "Underworld information broker."),
+  v("dc-cobalt-blue", "Cobalt Blue", "Malcolm Thawne", E0, ["Independent"], "male", "human",
+    ["Blue Flame", "Stolen speed", "Talisman"],
+    "Speed Force", "#1", 1997, "Barry Allen's stolen twin, burning with blue flame."),
   v("dc-count-vertigo", "Count Vertigo", "Werner Zytle", E0, ["Suicide Squad", "Injustice Society"], "male", "meta-human",
     ["Vertigo waves"], "World's Finest Comics", "#251", 1978, "Dizzying Vlatavan royal."),
   v("dc-cyborg-superman", "Cyborg Superman", "Hank Henshaw", E0, ["Independent"], "male", "other",

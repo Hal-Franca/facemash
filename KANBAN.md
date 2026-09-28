@@ -1,7 +1,7 @@
 # Kanban — Facemash (Scrum / Agile)
 
 Cards live in the **Kanban Markdown board**, not in this file:
-`.devtool/features/` (22 cards, mirrored from the plan below).
+`.devtool/features/` (43 cards: 23 active + 20 in `done/`).
 
 ## Running the board (VS Code + Kanban Markdown by LachyFS)
 
@@ -35,10 +35,17 @@ Cards live in the **Kanban Markdown board**, not in this file:
 - In progress: Vercel deploy, licensed portrait upgrades.
 - Shipped this round: README story, DC logo header + side drawer (Arena/Roster/Ladder),
   home top-20 lock, `/roster` (images, A–Z/Z–A/rank, filters, rank chips), `/ladder` (full text board).
+- Shipped 2026-09-28: mobile side-by-side arena + polish (two-line headers, unified
+  Keep left / Skip ⟳ / Keep right bar, VS badge, blue-vs-red names, stacked mobile
+  stats, pin-expands-below), vote-confirm flash, clear-filters on all screens,
+  Earth-0 civilian-name audit (Bane/Joker unnamed; Deathstorm, Johnny Quick,
+  Superboy-Prime, Etrigan corrected), Red X swapped for Cobalt Blue.
+  Growth backlog added: shows, doramas, novelas, books, movies, sports teams, games.
 - Next (To Do): global votes backend, admin CRUD, anti-bot, Playwright E2E,
   CI + branch protection.
 - Flow: `feature/*` → `dev` → `staging` → `prod`. Vercel Production tracks `prod`;
   `staging`/`dev` get their own Postgres (see `.env.example`) so test votes never
   touch prod MMR, ratings, or W/L. Push: `git push origin dev staging prod`.
 - Defaults: theme Dark, Flip Off, Stats-below Off.
-- Backlog: PT-BR i18n, Marvel universe, Anime, PWA/share/SEO, Glicko-2 + seasons.
+- Backlog: PT-BR i18n (+ header toggle), Marvel universe, Anime, PWA/share/SEO, Glicko-2 + seasons,
+  growth pools (shows, doramas, novelas, books, movies, sports teams, games).

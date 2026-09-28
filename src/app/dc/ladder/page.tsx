@@ -61,6 +61,22 @@ function LadderInner() {
       </div>
 
       <section className="mt-4 grid gap-3 rounded-2xl border p-4 sm:grid-cols-3">
+        <div className="flex items-center justify-between sm:col-span-3">
+          <p className="text-sm font-semibold opacity-70">Filters</p>
+          {(aff !== "all" || gender !== "all" || species !== "all" || query.trim() !== "") && (
+            <button
+              onClick={() => {
+                setAff("all");
+                setGender("all");
+                setSpecies("all");
+                setQuery("");
+              }}
+              className="rounded-full border px-3 py-1 text-xs"
+            >
+              Clear ✕
+            </button>
+          )}
+        </div>
         <FilterSelect label="Affiliation" value={aff} onChange={(v) => setAff(v as AffFilter)}>
           <option value="all">All</option>
           <option value="hero">Hero</option>

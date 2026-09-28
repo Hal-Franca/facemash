@@ -1,5 +1,6 @@
 import type { Character } from "../../types";
 import { artFor } from "./art";
+import { buildBio } from "../../../lib/names";
 
 const E0 = "DC Universe — Earth-0";
 
@@ -21,9 +22,7 @@ function a(
     id, superName, name, category: "comics", universe: "dc",
     universeLabel, teams, affiliation: "anti-hero", gender, species, powers,
     firstAppearance: { comic, issue, year },
-    bio: name && name !== superName
-      ? `${name} is ${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`
-      : `${superName} of ${universeLabel}, affiliated with ${teams.join("; ")}. ${bio}`,
+    bio: buildBio(superName, name, universeLabel, teams, bio),
     image: artFor(id, superName),
   };
 }
